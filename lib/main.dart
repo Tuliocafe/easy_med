@@ -1,40 +1,57 @@
+
+import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:easy_med/servico/servico_autenticacao.dart';
+import 'package:easy_med/servico/servico_autenticacao_google.dart';
+import 'package:easy_med/telas/tela_cadastro_usuario.dart';
+import 'package:easy_med/telas/tela_login.dart';
+import 'package:easy_med/telas/tela_notificacao.dart';
+import 'package:easy_med/telas/tela_usuario.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:provider/provider.dart';
+import 'api/notificacao_api.dart';
 
-void main() {
-  runApp(const MyApp());
 
-  var db = FirebaseFirestore.instance;
-  db.collection("produtos").doc("produto1").set(
-    {
-      "nome":"caneta",
-      "preco":"3.00",
-      "ativo":true,
-    }
+
+
+void main() async {
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await NotificationService().init();
+  await AndroidAlarmManager.initialize();
+  await Firebase.initializeApp();
+
+  runApp(
+    MultiProvider(providers: [
+      // ainda estou aprendendo como usa.
+      // ChangeNotifierProvider(create: (context) => ServicoAutenticacao()),
+      ChangeNotifierProvider(create: (context) => ServicoAutenticacaoGoogle()),
+
+    ], child: MyApp()),
   );
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+
     return MaterialApp(
-      title: 'Flutter Demo',
+      // debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // Try running your application with "flutter run". You'll see the
-        // application has a blue toolbar. Then, without quitting the app, try
-        // changing the primarySwatch below to Colors.green and then invoke
-        // "hot reload" (press "r" in the console where you ran "flutter run",
-        // or simply save your changes to "hot reload" in a Flutter IDE).
-        // Notice that the counter didn't reset back to zero; the application
-        // is not restarted.
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.red,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
-      home: Container(),
+      home: TelaUsuario(),
+      // home: cadastroUsuario(),
+      // home: notificacao(),
     );
   }
 }
+
+
+
+
+
+
+
