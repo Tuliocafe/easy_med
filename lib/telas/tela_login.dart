@@ -6,10 +6,16 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
 import '../api/notificacao_api.dart';
+import '../database/app_database.dart';
+import '../database/dao/usuario_dao.dart';
+import '../model/usuario.dart';
+import '../servico/servico_autenticacao.dart';
 import '../servico/servico_autenticacao_google.dart';
+import '../servico/servico_cadastro.dart';
 
 class telalogin extends StatefulWidget {
-  const telalogin({Key? key}) : super(key: key);
+  final Usuario? usuario;
+  const telalogin({Key? key, this.usuario}) : super(key: key) ;
 
   @override
   _telaloginState createState() => _telaloginState();
@@ -17,25 +23,67 @@ class telalogin extends StatefulWidget {
 
 class _telaloginState extends State<telalogin> {
   final formKey = GlobalKey<FormState>();
+  Usuario? usuario ;
+
   final email = TextEditingController();
   final senha = TextEditingController();
-
+  final novoemail = 'tuliocafe@teste.com.br';
   bool loading = false;
 
+Future getUser()async{
+  final usuario = await getUsuarioBD('tuliocafe@teste.com.br');
 
+  setState(() {
+    this.usuario = usuario;
+  });
+
+}
+
+  // late TextEditingController controllerValidarEmail;
+  // late TextEditingController controllerValidarSenha;
+
+  @override
+  void initState() {
+    super.initState();
+    // initUser();
+  }
+
+  // void initUser() {
+  //   final email = widget.usuario == null ? '': widget.usuario!.email;
+  //   final senha = widget.usuario == null ? '': widget.usuario!.senha;
+  //
+  //
+  //   setState(() {
+  //     controllerValidarEmail = TextEditingController(text: email);
+  //     controllerValidarSenha = TextEditingController(text: senha);
+  //
+  //   });
+  // }
+
+  login() async {
+    setState(() => loading = true);
+    try {
+      await context.read<ServicoAutenticacao>().login(email.text, senha.text);
+    } on ExceptionAutenticacao catch (e) {
+      setState(() => loading = false);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text(e.message)));
+    }
+  }
 
 
   @override
   Widget build(BuildContext context) {
+    // ServicoCadastro usuario = Provider.of<ServicoCadastro>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Easy Med'),
+        title: Text('Bem Vindo'),
         centerTitle: true,
         backgroundColor: Colors.red,
       ),
       body: SingleChildScrollView(
         child: Padding(
-          padding: EdgeInsets.only(top: 50),
+          padding: EdgeInsets.only(top: 10),
           child: Form(
             key: formKey,
             child: Column(
@@ -43,16 +91,16 @@ class _telaloginState extends State<telalogin> {
               children: [
                 Padding(padding: EdgeInsets.all(8),
                    child: Image.asset('lib/imagens/ez_med.png'),),
-                const Text(
-                  'Seja bem vindo !!',
-                  style: TextStyle(
-                    fontSize: 30,
-                    fontWeight: FontWeight.bold,
-                    letterSpacing: -1.5,
-                  ),
-                ),
+                // const Text(
+                //   'Seja bem vindo !!',
+                //   style: TextStyle(
+                //     fontSize: 30,
+                //     fontWeight: FontWeight.bold,
+                //     letterSpacing: -1.5,
+                //   ),
+                // ),
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
                   child: TextFormField(
                     controller: email,
                     decoration: const InputDecoration(
@@ -69,7 +117,7 @@ class _telaloginState extends State<telalogin> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
                   child: TextFormField(
                     controller: senha,
                     obscureText: true,
@@ -88,7 +136,7 @@ class _telaloginState extends State<telalogin> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Colors.red,
@@ -96,7 +144,29 @@ class _telaloginState extends State<telalogin> {
                       shape: StadiumBorder(),
                     ),
                     onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => notificacao()));
+                      // print(controllerValidarEmail.text);
+                      // print(controllerValidarSenha.text);
+                      // List<Usuario> usuario = getUsuario('tuliocafe@teste.com.br');
+                      // Future <List<Map>> usuario = getUsuario('tuliocafe@teste.com.br');
+                      // getUsuario('tuliocafe@teste.com.br');
+                      //  = readAll('tuliocafe@teste.com.br');
+                      // print(teste);
+                      getUser();
+                      print(usuario);
+
+
+                      // createDatabase();
+                      // alterar();
+                      // banco();
+                      // print(db.query('usuario'))
+                      // findAll().then((usuarios) => print(usuarios.toString()));
+                      // validarEmailSenha(controllerValidarEmail.text, controllerValidarSenha.text);
+                      // print(listaemail);
+
+                      // salvar(Usuario(0, 'maria', 'masculino', 31, 'tuliocafe@yahoo.com.br', '123', 'normal')).then((id) {
+                      //   findAll().then((usuarios) => debugPrint(usuarios.toString()));
+                      // });
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => notificacao(usuario: usuario)));
 
                     },
                     child: Row(
@@ -127,7 +197,7 @@ class _telaloginState extends State<telalogin> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.all(16),
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Colors.white,
@@ -169,10 +239,26 @@ class _telaloginState extends State<telalogin> {
 
                   ),
                 ),
+                Padding(
+                  padding: EdgeInsets.all(24),
+
+                  child: GestureDetector(
+                    child:
+                    Text(
+                     'Não tem cadastro ? click aqui!',
+
+                  style: TextStyle(
+                    fontSize: 23,
+                    // fontWeight: FontWeight.bold,
+                    letterSpacing: -1.5,
+                  ),),
+                  onTap: () => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) =>  cadastroUsuario())),
+                ),
                 // TextButton(
                 //   onPressed: () => setFormAction(!isLogin),
                 //   child: Text(toggleButton),
-                // ),
+                ),
               ],
             ),
           ),

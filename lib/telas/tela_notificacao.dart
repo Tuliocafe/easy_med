@@ -8,20 +8,21 @@ import 'package:flutter/material.dart';
 
 import '../api/notificacao_api.dart';
 import '../main.dart';
+import '../model/usuario.dart';
+import '../widget/menu_lateral_widget.dart';
 
 class notificacao extends StatefulWidget {
+  final Usuario? usuario;
   // final String? payload;
-  const notificacao({Key? key,}) : super(key: key);
+  const notificacao({Key? key, this.usuario}) : super(key: key);
 
   @override
   _notificacaoState createState() => _notificacaoState();
 }
 
 
-
-
-
 class _notificacaoState extends State<notificacao> {
+  String? email;
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   NotificationService _notificationService = NotificationService();
   bool isOn = false;
@@ -47,11 +48,13 @@ class _notificacaoState extends State<notificacao> {
 
     @override
     Widget build(BuildContext context) {
+    email = widget.usuario?.email;
       return Scaffold(
         appBar: AppBar(
           title: Text('Easy Med'),
           centerTitle: true,
         ),
+        endDrawer: MenuLateralWidget(usuario: widget.usuario),
         body: Center(
           child: Column(children: <Widget>[
             Padding(
@@ -113,6 +116,10 @@ class _notificacaoState extends State<notificacao> {
                   }
                 },
               ),
+            ),
+            Padding(padding: EdgeInsets.all(16),
+              child: Text(email!),
+
             ),
           ]),
         ),
