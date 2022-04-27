@@ -1,3 +1,4 @@
+import 'package:easy_med/database/dao/medicamento_dao.dart';
 import 'package:easy_med/telas/tela_cadastro_usuario.dart';
 import 'package:easy_med/telas/tela_notificacao.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -8,12 +9,14 @@ import 'package:provider/provider.dart';
 import '../api/notificacao_api.dart';
 import '../database/app_database.dart';
 import '../database/dao/usuario_dao.dart';
+import '../model/medicamento.dart';
 import '../model/usuario.dart';
 import '../servico/servico_autenticacao.dart';
 import '../servico/servico_autenticacao_google.dart';
 import '../servico/servico_cadastro.dart';
 
 class telalogin extends StatefulWidget {
+
   final Usuario? usuario;
   const telalogin({Key? key, this.usuario}) : super(key: key) ;
 
@@ -22,6 +25,8 @@ class telalogin extends StatefulWidget {
 }
 
 class _telaloginState extends State<telalogin> {
+  final medicamentoDao daoMedicamento = medicamentoDao();
+  final usuarioDao daoUsuario = usuarioDao();
   final formKey = GlobalKey<FormState>();
   Usuario? usuario ;
 
@@ -31,7 +36,7 @@ class _telaloginState extends State<telalogin> {
   bool loading = false;
 
 Future getUser()async{
-  final usuario = await getUsuarioBD('tuliocafe@teste.com.br');
+  final usuario = await daoUsuario.getUsuarioBD('tuliocafe@teste.com.br');
 
   setState(() {
     this.usuario = usuario;
@@ -143,7 +148,7 @@ Future getUser()async{
                       minimumSize: Size.fromHeight(50),
                       shape: StadiumBorder(),
                     ),
-                    onPressed: () {
+                    onPressed: () async{
                       // print(controllerValidarEmail.text);
                       // print(controllerValidarSenha.text);
                       // List<Usuario> usuario = getUsuario('tuliocafe@teste.com.br');
@@ -151,8 +156,12 @@ Future getUser()async{
                       // getUsuario('tuliocafe@teste.com.br');
                       //  = readAll('tuliocafe@teste.com.br');
                       // print(teste);
-                      getUser();
-                      print(usuario);
+                      // getUser();
+                      // print(usuario);
+
+                      daoMedicamento.salvarMedicamento(Medicamento(idMedicamento: 0, nome: 'Dorflex', dosagem: '1g', quantidade: 30, laboratorio: 'De nos todos', ));
+                      // daoMedicamento.getMedicamento();
+                      print('ola');
 
 
                       // createDatabase();
@@ -163,10 +172,10 @@ Future getUser()async{
                       // validarEmailSenha(controllerValidarEmail.text, controllerValidarSenha.text);
                       // print(listaemail);
 
-                      // salvar(Usuario(0, 'maria', 'masculino', 31, 'tuliocafe@yahoo.com.br', '123', 'normal')).then((id) {
-                      //   findAll().then((usuarios) => debugPrint(usuarios.toString()));
+                    // daoUsuario.salvarUsuario(Usuario(id: 0, 'maria', 'masculino', 31, 'tuliocafe@yahoo.com.br', '123', 'normal')).then((id) {
+                    //     findAll().then((usuarios) => debugPrint(usuarios.toString()));
                       // });
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => notificacao(usuario: usuario)));
+                      // await Navigator.of(context).push(MaterialPageRoute(builder: (context) => notificacao(usuario: usuario)));
 
                     },
                     child: Row(

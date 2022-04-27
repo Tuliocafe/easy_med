@@ -8,15 +8,18 @@ import '../database/app_database.dart';
 import '../database/dao/usuario_dao.dart';
 
 class ServicoCadastro extends ChangeNotifier{
+  final usuarioDao daoUsuario = usuarioDao();
   late final Future<Usuario?> usuario;
+
 
   ServicoCadastro() {
     getUsuario();
   }
 
   getUsuario(){
+
     // ServicoAutenticacao auth = Provider.of<ServicoAutenticacao>(context);
-     usuario = getUsuarioBD('tuliocafe@teste.com.br');
+     usuario = daoUsuario.getUsuarioBD('tuliocafe@teste.com.br');
      print('testamos aqui');
     print(this.usuario);
   notifyListeners();

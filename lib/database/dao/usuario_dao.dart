@@ -93,7 +93,7 @@ validarEmailSenha(emailnovo, senha) async {
 }
 
 
-Future<Usuario> getUsuarioBD(email) async {
+  Future<Usuario> getUsuarioBD(email) async {
   final Database db = await getDatabase();
   final maps = await db.rawQuery('SELECT * FROM usuario WHERE email = "$email"');
   return Usuario.fromJson(maps.first);

@@ -31,7 +31,7 @@ void main() async {
     MultiProvider(providers: [
       // ainda estou aprendendo como usa.
       // ChangeNotifierProvider(create: (context) => ServicoCadastro()),
-      // ChangeNotifierProvider(create: (context) => ServicoAutenticacao()),
+      ChangeNotifierProvider(create: (context) => ServicoAutenticacao()),
       // ChangeNotifierProvider(create: (context) => ServicoAutenticacaoGoogle()),
 
 

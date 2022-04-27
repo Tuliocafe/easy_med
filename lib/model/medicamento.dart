@@ -1,15 +1,19 @@
 class Medicamento {
-  final int? id;
+  final int? idMedicamento;
   final String? nome;
   final String? dosagem;
   final int? quantidade;
   final String? laboratorio;
 
   Medicamento(
-      {this.id, this.nome, this.dosagem, this.quantidade, this.laboratorio});
+      {this.idMedicamento,
+      this.nome,
+      this.dosagem,
+      this.quantidade,
+      this.laboratorio});
 
   factory Medicamento.fromJson(Map<String, Object?> json) => Medicamento(
-        id: json["id"] as int,
+        idMedicamento: json["idMedicamento"] as int,
         nome: json["nome"] as String,
         dosagem: json["dosagem"] as String,
         quantidade: json["quantidade"] as int,
@@ -18,7 +22,7 @@ class Medicamento {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'idMedicamento': idMedicamento,
       'nome': nome,
       'dosagem': dosagem,
       'quantidade': quantidade,
@@ -28,6 +32,6 @@ class Medicamento {
 
   @override
   String toString() {
-    return 'Medicamento{id: $id, nome: $nome, dosagem: $dosagem, quantidade: $quantidade,}';
+    return 'Medicamento{idMedicamento: $idMedicamento, nome: $nome, dosagem: $dosagem, quantidade: $quantidade,}';
   }
 }

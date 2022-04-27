@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../servico/servico_autenticacao.dart';
 
 class cadastroUsuario extends StatefulWidget {
+
   final Usuario? usuario;
 
   // final String? payload;
@@ -18,6 +19,7 @@ class cadastroUsuario extends StatefulWidget {
 }
 
 class _cadastroUsuarioState extends State<cadastroUsuario> {
+  final usuarioDao daoUsuario = usuarioDao();
   final formKey = GlobalKey<FormState>();
   List<String> listasexo = ['Homem', 'Mulher', 'Não Informado'];
   List<Usuario> listaemail = [];
@@ -66,7 +68,7 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
       await context
           .read<ServicoAutenticacao>()
           .registrar(nome.text, email.text, senha.text);
-      await salvarUsuario(Usuario(
+      await daoUsuario.salvarUsuario(Usuario(
           id: 0,
           nome: nome.text,
           sexo: sexoSelecionado,
