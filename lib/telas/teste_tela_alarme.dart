@@ -1,7 +1,7 @@
+import 'package:easy_med/telas/novo_alarme.dart';
 import 'package:easy_med/telas/tela_notificacao.dart';
 import 'package:flutter/material.dart';
 
-import 'botao_add.dart';
 import 'modal_cadastro_alarme.dart';
 
 class telaalarme extends StatefulWidget {
@@ -40,7 +40,7 @@ class _alarmeState extends State<telaalarme> {
           onPressed: () {
             // Navigator.of(context).push(MaterialPageRoute(builder: (context) => notificacao()));
             Navigator.of(context).push(
-                ModalAlarme(builder: (context) => AddTodoButton()));
+                ModalAlarme(builder: (context) => NovoAlarme()));
           },
           label: const Text('Adicionar'),
           icon: const Icon(Icons.add),

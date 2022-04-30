@@ -1,21 +1,15 @@
 
 
-
-
-import 'package:easy_med/database/app_database.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../../model/usuario.dart';
+import '../app_database.dart';
 
 class usuarioDao {
 
 
-
-
-
 Future<int> salvarUsuario(Usuario usuario) async {
   final Database db = await getDatabase();
-  // return createDatabase().then((db) {
   final Map<String, dynamic> usuarioMap = Map();
   // usuarioMap['id'] = usuario.id;
   usuarioMap['nome'] = usuario.nome;
@@ -25,7 +19,6 @@ Future<int> salvarUsuario(Usuario usuario) async {
   usuarioMap['senha'] = usuario.senha;
   usuarioMap['tipo'] = usuario.tipo;
   return db.insert('usuario', usuarioMap);
-  // });
 }
 
 // Future<List<Usuario>> findAll() async {
@@ -48,21 +41,16 @@ Future<int> salvarUsuario(Usuario usuario) async {
 //   return usuarios;
 // }
 
-Future<Database> alterarUsuario() {
-  return getDatabasesPath().then((dbPath) {
-    final String path = join(dbPath, 'easymed.db');
-    return openDatabase(path, onCreate: (db, version) {
-      db.execute('ALTER TABLE usuario(ADD COLUMN idade INTEGER)');
-    }, version: 2);
-  });
-}
+// Future<Database> alterarUsuario() {
+//   return getDatabasesPath().then((dbPath) {
+//     final String path = join(dbPath, 'easymed.db');
+//     return openDatabase(path, onCreate: (db, version) {
+//       db.execute('ALTER TABLE usuario(ADD COLUMN idade INTEGER)');
+//     }, version: 2);
+//   });
+// }
 
-void banco() async {
-  var databasesPath = await getDatabasesPath();
-  String path = join(databasesPath, 'easymed.db');
-  await deleteDatabase(path);
-  print(path);
-}
+
 
 validarEmail(emailnovo, senha) async {
   final Database db = await getDatabase();
@@ -83,13 +71,13 @@ validarEmailSenha(emailnovo, senha) async {
   print(emails);
   for (var item in emails) {
     if (item['email'] == emailnovo) {
-      print('valido');
-      if (item['senha'] == senha) print('senha ok pode logar');
+      if (item['senha'] == senha) {
+        return true;
+      }
     }
-    // return true;
   }
-  print('achou nada nao jovem');
-  // return false;
+  // print('achou nada nao jovem');
+  return false;
 }
 
 
@@ -97,6 +85,14 @@ validarEmailSenha(emailnovo, senha) async {
   final Database db = await getDatabase();
   final maps = await db.rawQuery('SELECT * FROM usuario WHERE email = "$email"');
   return Usuario.fromJson(maps.first);
+}
+
+Future<Usuario> getAllUsuario() async {
+  final Database db = await getDatabase();
+  final maps = await db.rawQuery('SELECT * FROM usuario');
+  print(maps);
+  return Usuario.fromJson(maps.first);
+
 }
 
 }

@@ -13,10 +13,10 @@ class Medicamento {
       this.laboratorio});
 
   factory Medicamento.fromJson(Map<String, Object?> json) => Medicamento(
-        idMedicamento: json["idMedicamento"] as int,
+        idMedicamento: json["idMedicamento"] as int?,
         nome: json["nome"] as String,
         dosagem: json["dosagem"] as String,
-        quantidade: json["quantidade"] as int,
+        quantidade: json["quantidade"] as int?,
         laboratorio: json["laboratorio"] as String,
       );
 

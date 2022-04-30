@@ -66,7 +66,7 @@ class _notificacaoState extends State<notificacao> {
                       // date time format (year,month,date,hour,minutes,seconds)
                         Duration(seconds: 5),
                         alarmId,
-                        navega,
+                        notifica,
                         exact: true,
                         alarmClock: true,
                         wakeup: true,
@@ -94,29 +94,29 @@ class _notificacaoState extends State<notificacao> {
                   child: Text('Agendar com data'),
                 )),
 
-            Padding(
-              padding: EdgeInsets.all(16),
-              child: Switch(
-                value: isOn,
-                onChanged: (value) {
-                  setState(() {
-                    isOn = value;
-                  });
-                  if (isOn == true) {
-                    print(DateTime.now());
-                    AndroidAlarmManager.oneShotAt(
-                      // date time format (year,month,date,hour,minutes,seconds)
-                      DateTime(2022, 03, 20, 00, 20),
-                      alarmId,
-                      fireAlarm,
-                    );
-                  } else {
-                    AndroidAlarmManager.cancel(2);
-                    print('Alarm Timer Canceled');
-                  }
-                },
-              ),
-            ),
+            // Padding(
+            //   padding: EdgeInsets.all(16),
+            //   child: Switch(
+            //     value: isOn,
+            //     onChanged: (value) {
+            //       setState(() {
+            //         isOn = value;
+            //       });
+            //       if (isOn == true) {
+            //         print(DateTime.now());
+            //         AndroidAlarmManager.oneShotAt(
+            //           // date time format (year,month,date,hour,minutes,seconds)
+            //           DateTime(2022, 03, 20, 00, 20),
+            //           alarmId,
+            //           fireAlarm,
+            //         );
+            //       } else {
+            //         AndroidAlarmManager.cancel(2);
+            //         print('Alarm Timer Canceled');
+            //       }
+            //     },
+            //   ),
+            // ),
             Padding(padding: EdgeInsets.all(16),
               child: Text(email!),
 
@@ -138,9 +138,9 @@ void notifica() async{
   print('que que pega foi?');
 
 
-  // final noticia = NotificationService();
-  // await noticia.init();
-  // await noticia.showNotifications();
+  final noticia = NotificationService();
+  await noticia.init();
+  await noticia.showNotifications();
 }
 
 

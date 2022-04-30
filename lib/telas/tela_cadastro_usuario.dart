@@ -1,6 +1,7 @@
 import 'package:easy_med/database/app_database.dart';
 import 'package:easy_med/database/dao/usuario_dao.dart';
 import 'package:easy_med/model/usuario.dart';
+import 'package:easy_med/telas/tela_alarme.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -8,20 +9,21 @@ import '../servico/servico_autenticacao.dart';
 
 class cadastroUsuario extends StatefulWidget {
 
-  final Usuario? usuario;
+
 
   // final String? payload;
 
-  const cadastroUsuario({this.usuario});
+
 
   @override
   _cadastroUsuarioState createState() => _cadastroUsuarioState();
 }
 
 class _cadastroUsuarioState extends State<cadastroUsuario> {
+  Usuario? usuario;
   final usuarioDao daoUsuario = usuarioDao();
   final formKey = GlobalKey<FormState>();
-  List<String> listasexo = ['Homem', 'Mulher', 'Não Informado'];
+  List<String> listasexo = ['Masculino', 'Faminino', 'Não Informado'];
   List<Usuario> listaemail = [];
   String? sexoSelecionado;
   bool loading = false;
@@ -29,6 +31,17 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
   final email = TextEditingController();
   final senha = TextEditingController();
   final idade = TextEditingController();
+
+
+  Future getUser(email)async{
+    final usuario = await daoUsuario.getUsuarioBD(email);
+
+    setState(() {
+      this.usuario = usuario;
+    });
+
+  }
+
 
   // late TextEditingController controllerNome;
   // late TextEditingController controllerEmail;
@@ -62,14 +75,14 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
   //   });
   // }
 
-  registrar() async {
+  Future registrar() async {
     setState(() => loading = true);
     try {
       await context
           .read<ServicoAutenticacao>()
           .registrar(nome.text, email.text, senha.text);
       await daoUsuario.salvarUsuario(Usuario(
-          id: 0,
+          // idUsuario: 0,
           nome: nome.text,
           sexo: sexoSelecionado,
           idade: int.parse(idade.text),
@@ -187,6 +200,7 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
       ),
       onPressed: () async {
         try {
+          registrar().then((value) => getUser(email.text).then((value) => Navigator.of(context).push(MaterialPageRoute(builder: (context) => alarme(usuario: usuario,)))));
           // ainda preciso validar o tipo
         } catch (e) {}
       },

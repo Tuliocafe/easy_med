@@ -1,5 +1,5 @@
 class Usuario {
-  final int? id;
+  final int? idUsuario;
   final String? nome;
   final String? sexo;
   final int? idade;
@@ -8,7 +8,7 @@ class Usuario {
   final String? tipo;
 
   Usuario(
-      {this.id,
+      {this.idUsuario,
       this.nome,
       this.sexo,
       this.idade,
@@ -17,17 +17,17 @@ class Usuario {
       this.tipo});
 
   factory Usuario.fromJson(Map<String, Object?> json) => Usuario(
-      id: json["id"] as int,
+      idUsuario: json["idUsuario"] as int?,
       nome: json["nome"] as String,
       sexo: json["sexo"] as String,
-      idade: json["idade"] as int,
+      idade: json["idade"] as int?,
       email: json["email"] as String,
       senha: json["senha"] as String,
       tipo: json["tipo"] as String);
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      'idUsuario': idUsuario,
       'nome': nome,
       'sexo': sexo,
       'idade': idade,
@@ -39,7 +39,7 @@ class Usuario {
 
   @override
   String toString() {
-    return 'Usuario{id: $id, nome: $nome, sexo: $sexo, idade: $idade, email: $email, senha: $senha,'
+    return 'Usuario{idUsuario: $idUsuario, nome: $nome, sexo: $sexo, idade: $idade, email: $email, senha: $senha,'
         ' tipo: $tipo }';
   }
 }

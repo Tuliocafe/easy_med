@@ -23,20 +23,21 @@ void main() async {
 
 
   WidgetsFlutterBinding.ensureInitialized();
-  await NotificationService().init();
+  // await NotificationService().init();
   await AndroidAlarmManager.initialize();
   await Firebase.initializeApp();
 
   runApp(
     MultiProvider(providers: [
       // ainda estou aprendendo como usa.
-      // ChangeNotifierProvider(create: (context) => ServicoCadastro()),
+      ChangeNotifierProvider(create: (context) => ServicoCadastro()),
       ChangeNotifierProvider(create: (context) => ServicoAutenticacao()),
-      // ChangeNotifierProvider(create: (context) => ServicoAutenticacaoGoogle()),
+      ChangeNotifierProvider(create: (context) => ServicoAutenticacaoGoogle()),
 
 
     ],
         child: MyApp()),
+  // MyApp()
   );
 }
 
@@ -51,8 +52,9 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.red,
         visualDensity: VisualDensity.adaptivePlatformDensity,
       ),
+      home: telalogin(),
       // home: notificacao()
-      home: TelaUsuario(),
+      // home: TelaUsuario(),
       // home: cadastroUsuario(),
       // home: alarme(),
     );
