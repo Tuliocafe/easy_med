@@ -45,6 +45,7 @@ dependencies:
   flutter_local_notifications: ^9.4.0
   provider: ^6.0.2
   font_awesome_flutter: ^10.1.0
+  flutter_alarm_clock: ^0.0.2
 
   rxdart: ^0.27.3
 

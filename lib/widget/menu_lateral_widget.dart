@@ -23,18 +23,18 @@ class MenuLateralWidget extends StatelessWidget {
             accountName: Text('${usuario?.nome}'),
             accountEmail: Text('${usuario?.email}')),
         itemMenuLateral(
-            text: 'teste no relogio',
-            icon: Icons.logout,
+            text: 'Menu Especial',
+            icon: Icons.vpn_key,
             onClicked: () {
               Navigator.of(context)
                   .push(MaterialPageRoute(builder: (context) => notificacao(usuario: usuario)));
             }),
         itemMenuLateral(
             text: 'Tela de Alarme',
-            icon: Icons.logout,
+            icon: Icons.access_alarm,
             onClicked: () {
               Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => alarme(usuario: usuario,)));
+                  .push(MaterialPageRoute(builder: (context) => TelaAlarme(usuario: usuario,)));
             }),
         itemMenuLateral(
             text: 'Sair',

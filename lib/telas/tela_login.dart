@@ -2,6 +2,7 @@ import 'package:easy_med/database/dao/medicamento_dao.dart';
 import 'package:easy_med/telas/tela_alarme.dart';
 import 'package:easy_med/telas/tela_cadastro_usuario.dart';
 import 'package:easy_med/telas/tela_notificacao.dart';
+import 'package:easy_med/telas/teste_tela_alarme.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -29,7 +30,6 @@ class telalogin extends StatefulWidget {
 
 class _telaloginState extends State<telalogin> {
   Usuario? usuario;
-  final tempo = "2022-02-27";
 
   final medicamentoDao daoMedicamento = medicamentoDao();
   final usuarioDao daoUsuario = usuarioDao();
@@ -43,6 +43,11 @@ class _telaloginState extends State<telalogin> {
   final String novoemail = 'tuliocafe@yahoo.com.br';
   bool loading = false;
 
+  void initState() {
+    super.initState();
+    listenNotifications();
+  }
+
   Future getUser(emailvalidador) async {
     final usuario = await daoUsuario.getUsuarioBD(emailvalidador);
 
@@ -51,19 +56,27 @@ class _telaloginState extends State<telalogin> {
     });
   }
 
-  Future validar(email, senha) async {
-    // if (daoUsuario.validarEmailSenha(email, senha)){
-    //   print('verdade');
-    // }
-    valido = await daoUsuario.validarEmailSenha(email, senha);
-    setState(() {
-      this.valido = valido;
-    });
+  validar(email, senha) async {
+    if (await daoUsuario.validarEmailSenha(email, senha) == true) {
+      return true;
+    }
+      else {
+        return false;}
+
+  }
+
+  void listenNotifications() {
+    NotificationService.onNotifications.stream.listen(onClickNotification);
+  }
+
+  void onClickNotification(String? payload) {
+    Navigator.of(context)
+        .push(MaterialPageRoute(builder: (context) => notificacao()));
   }
 
   // late TextEditingController controllerValidarEmail;
   // late TextEditingController controllerValidarSenha;
-
+  //
   // @override
   // void didUpdateWidget(covariant telalogin oldWidget) {
   //   super.didUpdateWidget(oldWidget);
@@ -179,30 +192,45 @@ class _telaloginState extends State<telalogin> {
                       // print(teste);
                       // try aweit getUser();
 
-                      // daoUsuario.getAllUsuario();
+                      daoUsuario.getAllUsuario();
+
                       final form = formKey.currentState!;
                       final isValid = form.validate();
                       if (isValid) {
-                        if (email.text == '1')  {
+                        if (email.text == '1') {
                           getUser(novoemail).then((value) =>
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) =>
-                                      alarme(usuario: usuario))));
+                                      TelaAlarmeTeste(usuario: usuario))));
                         } else {
-                          try {
-                            validar(email.text, senha.text);
-                            print(valido);
-                            if (valido == true) {
-                              getUser(email.text).then((value) =>
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) =>
-                                          alarme(usuario: usuario))));
-                            }
-                          } catch (e) {
-                            print('email nao cadastrado');
+                          valido =  await validar(email.text, senha.text);
+                          // try {
+                          if (valido == true) {
+                            // if (valido == true) {
+                            //   getUser(email.text).then((value) =>
+                            // print('Certo'));
+                            getUser(email.text).then((value) =>
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) =>
+                                    TelaAlarme(usuario: usuario))));
+                          } else {
+                            final snackBar = SnackBar(
+                                content: Text(
+                                    'Email ou senha invalido.'),
+                                action: SnackBarAction(
+                                  label: 'Recolher',
+                                  onPressed: () {},
+                                ));
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
                           }
                         }
+                        // } catch (e) {
+                        //   print('email nao cadastrado');
+                        // }
                       }
+                      // }
+
                       // getUser(email.text).then((value) => Navigator.of(context).push(MaterialPageRoute(builder: (context) => alarme(usuario: usuario))));
                       // print(usuario);
                       // Navigator.of(context).push(MaterialPageRoute(builder: (context) => notificacao(usuario: usuario)));
@@ -210,9 +238,15 @@ class _telaloginState extends State<telalogin> {
                       // print(usuario);
 
                       // apagabanco();
-                      // daoMedicamento.salvarMedicamento(Medicamento(nome: 'Dorflex', dosagem: '1g', quantidade: 30, laboratorio: 'De nos todos', ));
+
+                      // daoMedicamento.salvarMedicamento(Medicamento(nome: 'Dorflex', dosagem: '1g', quantidade: 30, laboratorio: 'De nos todos'));
+                      // daoMedicamento.salvarMedicamento(Medicamento(nome: 'Dipirona', dosagem: '1g', quantidade: 30, laboratorio: 'Neo Quimica'));
+                      // daoMedicamento.salvarMedicamento(Medicamento(nome: 'Loratadina', dosagem: '10mg', quantidade: 30, laboratorio: 'Prati Donaduzzi'));
+                      // daoMedicamento.salvarMedicamento(Medicamento(nome: 'Meloxicam', dosagem: '15mg', quantidade: 5, laboratorio: 'Medquimica'));
+                      // daoMedicamento.salvarMedicamento(Medicamento(nome: 'Albendazol',  dosagem: '400mg', quantidade: 3, laboratorio: 'Prati Donaduzzi'));
+                      //
                       // daoUsuario.salvarUsuario(Usuario(nome: 'Tulio Cafe', sexo: 'masculino',idade: 31, email: 'tuliocafe@yahoo.com.br', senha: '123',tipo: 'normal'));
-                      // daoAlarme.salvarAlarme(Alarme(idUsuario: 1, idMedicamento: 1, nome: 'Alarme do dorflex' ,data: "2022-02-27" ));
+                      // daoAlarme.salvarAlarme(Alarme(idUsuario: 1, idMedicamento: 1, nome: 'Alarme Primeiro' ,hora: '9', minuto: '30' ));
                       // daoAlarme.getAlarmeBD();
                       // daoUsuario.getAllUsuario();
                       // daoMedicamento.getMedicamento();

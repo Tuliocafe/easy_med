@@ -1,4 +1,5 @@
 import 'package:easy_med/telas/tela_notificacao.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:rxdart/rxdart.dart';
 
@@ -34,6 +35,7 @@ class NotificationService {
 
 
   Future selectNotification(String? payload) async {
+    // Navigator.push( (context)context, route)notificacao();
     onNotifications.add(payload);
   }
 
@@ -47,12 +49,31 @@ class NotificationService {
     fullScreenIntent: true,
   );
 
-  Future<void> showNotifications() async {
+  Future<void> showNotifications(int idagenda, String? nomeMedicamento) async {
     await flutterLocalNotificationsPlugin.show(
-      1,
+      idagenda,
       "Hora do Medicamento",
-      "Vai tomar esse remedio ai filhão",
+      "Seu remedio agora é o $nomeMedicamento",
       NotificationDetails(android: _androidNotificationDetails),
+    );
+  }
+}
+
+class app extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+
+    return MaterialApp(
+      // debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.red,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: notificacao(),
+      // home: notificacao()
+      // home: TelaUsuario(),
+      // home: cadastroUsuario(),
+      // home: alarme(),
     );
   }
 }

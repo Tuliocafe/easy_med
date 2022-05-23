@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import '../../model/medicamento.dart';
@@ -22,7 +24,22 @@ Future<List<Medicamento>> getMedicamento() async{
   final lista = await db.rawQuery('SELECT * FROM medicamento');
   print(lista);
   return lista.map((json)  => Medicamento.fromJson(json)).toList();
+}
+
+Future<List<Medicamento>> getMedicamentoNome() async{
+  final Database db = await getDatabase();
+  final lista = await db.rawQuery('SELECT idMedicamento, nome FROM medicamento');
+  print(lista);
+  return lista.map((json)  => Medicamento.fromJson(json)).toList();
+}
+
+Future<Medicamento> getMedicamentoId(idmedicamento) async{
+  final Database db = await getDatabase();
+  final map = await db.rawQuery('SELECT * FROM medicamento WHERE idMedicamento = "$idmedicamento"');
+  print(map);
+  return Medicamento.fromJson(map.first);
 
 }
+
 
 }

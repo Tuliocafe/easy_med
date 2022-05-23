@@ -2,18 +2,14 @@ import 'package:easy_med/database/app_database.dart';
 import 'package:easy_med/database/dao/usuario_dao.dart';
 import 'package:easy_med/model/usuario.dart';
 import 'package:easy_med/telas/tela_alarme.dart';
+import 'package:easy_med/telas/tela_confirmacao.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../servico/servico_autenticacao.dart';
 
 class cadastroUsuario extends StatefulWidget {
-
-
-
   // final String? payload;
-
-
 
   @override
   _cadastroUsuarioState createState() => _cadastroUsuarioState();
@@ -30,18 +26,16 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
   final nome = TextEditingController();
   final email = TextEditingController();
   final senha = TextEditingController();
+  final confirmacaosenha = TextEditingController();
   final idade = TextEditingController();
 
-
-  Future getUser(email)async{
+  Future getUser(email) async {
     final usuario = await daoUsuario.getUsuarioBD(email);
 
     setState(() {
       this.usuario = usuario;
     });
-
   }
-
 
   // late TextEditingController controllerNome;
   // late TextEditingController controllerEmail;
@@ -101,7 +95,7 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.red,
-        title: Text('Cadastro'),
+        title: const Text('Cadastro'),
         centerTitle: true,
       ),
       body: Center(
@@ -135,6 +129,10 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
                   const SizedBox(
                     height: 16,
                   ),
+                  buildConfirmacaoSenha(),
+                  const SizedBox(
+                    height: 16,
+                  ),
                   buildConfirmar(),
                   const SizedBox(
                     height: 16,
@@ -150,7 +148,7 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
 
   Widget buildNome() => TextFormField(
         controller: nome,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           labelText: 'Nome',
           border: OutlineInputBorder(),
         ),
@@ -160,7 +158,7 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
 
   Widget buildEmail() => TextFormField(
         controller: email,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           labelText: 'E-mail',
           border: OutlineInputBorder(),
         ),
@@ -172,8 +170,20 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
         keyboardType: TextInputType.visiblePassword,
         controller: senha,
         obscureText: true,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           labelText: 'Senha',
+          border: OutlineInputBorder(),
+        ),
+        validator: (value) =>
+            value != null && value.isEmpty ? 'Digite sua senha' : null,
+      );
+
+  Widget buildConfirmacaoSenha() => TextFormField(
+        keyboardType: TextInputType.visiblePassword,
+        controller: confirmacaosenha,
+        obscureText: true,
+        decoration: const InputDecoration(
+          labelText: 'Confirmar Senha',
           border: OutlineInputBorder(),
         ),
         validator: (value) =>
@@ -183,7 +193,7 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
   Widget buildIdade() => TextFormField(
         keyboardType: TextInputType.number,
         controller: idade,
-        decoration: InputDecoration(
+        decoration: const InputDecoration(
           labelText: 'Idade',
           border: OutlineInputBorder(),
         ),
@@ -199,10 +209,25 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
         shape: StadiumBorder(),
       ),
       onPressed: () async {
-        try {
-          registrar().then((value) => getUser(email.text).then((value) => Navigator.of(context).push(MaterialPageRoute(builder: (context) => alarme(usuario: usuario,)))));
-          // ainda preciso validar o tipo
-        } catch (e) {}
+        if (senha.text == confirmacaosenha.text) {
+          try {
+            registrar().then((value) => getUser(email.text)
+                .then((value) => Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TelaAlarme(
+                          usuario: usuario,
+                        )))));
+            // ainda preciso validar o tipo
+          } catch (e) {}
+        } else {
+          final snackBar = SnackBar(
+              content:
+                  const Text('Senha não confere. Favor digitar novamente.'),
+              action: SnackBarAction(
+                label: 'Recolher',
+                onPressed: () {},
+              ));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       },
       child: const Text('Salvar'),
     );
@@ -243,7 +268,7 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
         children: <Widget>[
           DropdownButton<String>(
             hint: const Text(
-              'Sexo',
+              'Genero',
               style: TextStyle(color: Colors.grey, fontSize: 18),
             ),
             value: sexoSelecionado,

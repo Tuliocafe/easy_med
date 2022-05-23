@@ -57,8 +57,7 @@ validarEmail(emailnovo, senha) async {
   final List<Map> emails = await db.rawQuery('SELECT email FROM usuario');
   for (var item in emails) {
     if (item.containsValue(emailnovo)) return true;
-  }
-  ;
+  };
   return false;
 }
 

@@ -158,6 +158,12 @@
       "languageVersion": "2.12"
     },
     {
+      "name": "flutter_alarm_clock",
+      "rootUri": "file:///C:/Flutter/.pub-cache/hosted/pub.dartlang.org/flutter_alarm_clock-0.0.2",
+      "packageUri": "lib/",
+      "languageVersion": "2.12"
+    },
+    {
       "name": "flutter_lints",
       "rootUri": "file:///C:/Flutter/.pub-cache/hosted/pub.dartlang.org/flutter_lints-1.0.4",
       "packageUri": "lib/",
@@ -482,7 +488,7 @@
       "languageVersion": "2.15"
     }
   ],
-  "generated": "2022-04-16T17:48:05.296076Z",
+  "generated": "2022-05-01T19:46:32.289625Z",
   "generator": "pub",
   "generatorVersion": "2.16.1"
 }
