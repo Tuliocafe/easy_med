@@ -1,9 +1,12 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:easy_med/servico/servico_cadastro.dart';
 import 'package:easy_med/telas/tela_login.dart';
+import 'package:easy_med/widget/autenticacao_widget.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'api/notificacao_api.dart';
-
+import 'model/usuario.dart';
 
 
 
@@ -59,6 +62,7 @@ class MyApp extends StatelessWidget {
       // home: cadastroUsuario(),
       // home: alarme(),
       // home: confirmacao(),
+      // home: VerificarAuthWidget(),
     );
   }
 }

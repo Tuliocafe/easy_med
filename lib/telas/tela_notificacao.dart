@@ -75,7 +75,9 @@ class _notificacaoState extends State<notificacao> {
         title: Text('Cadastro Especial'),
         centerTitle: true,
       ),
-      endDrawer: MenuLateralWidget(usuario: widget.usuario),
+      endDrawer: MenuLateralWidget(
+          usuario: widget.usuario
+      ),
       body: Center(
         child: Column(children: <Widget>[
           Padding(
@@ -83,17 +85,6 @@ class _notificacaoState extends State<notificacao> {
               child: ElevatedButton(
                 onPressed: () async {
                   apagabanco();
-                  // await _notificationService.showNotifications();
-                  // AndroidAlarmManager.oneShot(
-                  //     // date time format (year,month,date,hour,minutes,seconds)
-                  //     Duration(seconds: 5),
-                  //     alarmId,
-                  //     notifica,
-                  //     exact: true,
-                  //     alarmClock: true,
-                  //     wakeup: true,
-                  //     allowWhileIdle: true,
-                  //     rescheduleOnReboot: true);
                 },
                 child: Text('Apaga Banco'),
               )),
@@ -101,17 +92,7 @@ class _notificacaoState extends State<notificacao> {
               padding: EdgeInsets.all(16),
               child: ElevatedButton(
                 onPressed: () async {
-                  // await _notificationService.showNotifications();
-                  // AndroidAlarmManager.oneShotAt(
-                  //     // date time format (year,month,date,hour,minutes,seconds)
-                  //     DateTime(2022, 03, 21, 10, 10),
-                  //     alarmId,
-                  //     notifica,
-                  //     exact: true,
-                  //     alarmClock: true,
-                  //     wakeup: true,
-                  //     allowWhileIdle: true,
-                  //     rescheduleOnReboot: true);
+
                   daoMedicamento.salvarMedicamento(Medicamento(nome: 'Dorflex', dosagem: '1g', quantidade: 30, laboratorio: 'De nos todos'));
                   daoMedicamento.salvarMedicamento(Medicamento(nome: 'Dipirona', dosagem: '1g', quantidade: 30, laboratorio: 'Neo Quimica'));
                   daoMedicamento.salvarMedicamento(Medicamento(nome: 'Loratadina', dosagem: '10mg', quantidade: 30, laboratorio: 'Prati Donaduzzi'));
@@ -157,7 +138,7 @@ class _notificacaoState extends State<notificacao> {
 }
 
 void fireAlarm() {
-  print('Vai tomar remedio caralho ');
+  print('Vai tomar remedio cara ');
   // _notificationService.showNotifications();
 }
 

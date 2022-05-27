@@ -27,8 +27,18 @@ class alarmeDao {
     }).toList();
   }
 
+  Future<List<Alarme>> getAlarmeUsuario(idusuario) async {
+    final Database db = await getDatabase();
+    final lista =
+        await db.rawQuery('SELECT * FROM alarme WHERE idUsuario = $idusuario');
+    print(lista);
+    return lista.map((json) {
+      return Alarme.fromJson(json);
+    }).toList();
+  }
+
   // db.delete("Client", where: "id = ?", whereArgs: [id]);
-  deletarAlarme(int id) async {
+  deletarAlarme(int? id) async {
     final Database db = await getDatabase();
     db.delete('alarme', where: 'idAlarme = $id');
   }
@@ -40,20 +50,28 @@ class alarmeDao {
     return int.parse(mapsatualizado[1]);
   }
 
-    Future<Alarme> getultimoAlarmeBD() async {
-      final Database db = await getDatabase();
-      final lista = await db.rawQuery('SELECT * FROM alarme');
-      return Alarme.fromJson(lista.last);
-
-    }
-
-   updateQuantidade(idalarme, quantidade) async {
+  Future<Alarme> getultimoAlarmeBD() async {
     final Database db = await getDatabase();
-    await db.rawUpdate('UPDATE alarme SET quantidade = $quantidade WHERE idAlarme = $idalarme');
+    final lista = await db.rawQuery('SELECT * FROM alarme');
+    return Alarme.fromJson(lista.last);
+  }
+
+  updateQuantidade(idalarme, quantidade) async {
+    final Database db = await getDatabase();
+    await db.rawUpdate(
+        'UPDATE alarme SET quantidade = $quantidade WHERE idAlarme = $idalarme');
     // return Alarme.fromJson(lista);
   }
 
-  Future<List<Map>> selectAgenda() async{
+  updateNome(idalarme, nome) async {
+    final Database db = await getDatabase();
+    await db
+        .rawUpdate('UPDATE alarme SET nome = "$nome" WHERE idAlarme = $idalarme');
+    // return Alarme.fromJson(lista);
+  }
+
+  //inner join que nao consegui fazer
+  Future<List<Map>> selectAgenda() async {
     final Database db = await getDatabase();
     final lista = await db.rawQuery('SELECT alarme.idAlarme, alarme.idUsuario, '
         'alarme.nome, alarme.hora, alarme.minuto, medicamento.nome, medicamento.dosagem'
@@ -61,10 +79,8 @@ class alarmeDao {
 
     print(lista);
     return lista;
-
   }
-
-  }
+}
 //
 // final maps = await db.rawQuery('SELECT Agenda.idAgenda, Agenda.idUsuario, Agenda.Quantidade, Agenda.hora, Agenda.minuto, Medicamento.Nome,'
 // ' Medicamento.dosagem, FROM Agenda INNER JOIN Medicamento, ON Agenda.idMedicamento = Medicamento.idMedicamento');

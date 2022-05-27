@@ -5,19 +5,20 @@ import 'package:easy_med/model/medicamento.dart';
 import 'package:easy_med/telas/novo_alarme.dart';
 import 'package:easy_med/telas/tela_cadastro_medicamento.dart';
 import 'package:easy_med/telas/tela_confirmacao.dart';
+import 'package:easy_med/telas/tela_edicao_alarme.dart';
 import 'package:easy_med/telas/tela_notificacao.dart';
 import 'package:flutter/material.dart';
 
 import '../database/dao/medicamento_dao.dart';
 import '../model/usuario.dart';
-import '../widget/menu_lateral_widget.dart';
 import 'modal_cadastro_alarme.dart';
 
 
 class TelaAlarme extends StatefulWidget {
-  final Usuario? usuario;
-  final Medicamento? medicamento;
-  final Alarme? alarme;
+  Usuario? usuario;
+  Medicamento? medicamento;
+  Alarme? alarme;
+  final int? id;
 
   // alarme({Key? key}) : super(key: key);
 
@@ -25,7 +26,7 @@ class TelaAlarme extends StatefulWidget {
   //
   // ];
 
-  TelaAlarme({Key? key, this.usuario,this.medicamento, this.alarme}) : super(key: key);
+  TelaAlarme({Key? key, this.usuario,this.medicamento, this.alarme, this.id,}) : super(key: key);
 
   @override
   _TelaAlarmeState createState() => _TelaAlarmeState();
@@ -38,8 +39,8 @@ class _TelaAlarmeState extends State<TelaAlarme> {
   final alarmeDao daoAlarme = alarmeDao();
 
   String? email;
-  int contador = 0;
   List<Alarme> alarmes = [];
+  List<Medicamento> listMedicamentos = [];
   String? dosagem;
   List<Map> alarmenovo = [];
 
@@ -53,9 +54,10 @@ class _TelaAlarmeState extends State<TelaAlarme> {
   @override
   initState(){
     super.initState();
-    listarAgenda();
-    listarAgenda2();
-
+    listaMedicamento();
+    // listarAgenda();
+    // print(widget.usuario?.email);
+    listarAgendaUsuario(widget.usuario?.idUsuario);
   }
 
   Future listarAgenda() async{
@@ -66,85 +68,64 @@ class _TelaAlarmeState extends State<TelaAlarme> {
     return Future.delayed(Duration(seconds: 0));
   }
 
-  Future listarAgenda2() async{
-    final alarme2 = await daoAlarme.selectAgenda();
+  Future listarAgendaUsuario(usuario) async{
+    final alarme = await daoAlarme.getAlarmeUsuario(usuario);
     setState(() {
-      alarmenovo = alarme2;
+      this.alarmes = alarme;
     });
-    return Future.delayed(Duration(seconds: 0));
   }
 
-  int _indexAtual = 0;
+  Future listaMedicamento() async{
+    final medicamentos = await daoMedicamento.getMedicamento();
+    setState(() {
+      listMedicamentos = medicamentos;
+    });
+  }
 
-  final tabs = [
-    TelaAlarme(),
-    cadastroMedicameto(),
-  ];
+  // Future listarAgenda2() async{
+  //   final alarme2 = await daoAlarme.selectAgenda();
+  //   setState(() {
+  //     alarmenovo = alarme2;
+  //   });
+  //   return Future.delayed(Duration(seconds: 0));
+  // }
+
+
 
   @override
   Widget build(BuildContext context) {
     email = widget.usuario?.email;
-    // listarAgenda();
-    // widget.alarmes
-    //     .add(AlarmeInfo(medicamento: 'PredSim', hora: '15', minuto: '30'));
     return Scaffold(
-
         // backgroundColor: Colors.black,
-        appBar: AppBar(
-          title: const Text('Alarmes'),
-        ),
-        bottomNavigationBar: BottomNavigationBar(
-          currentIndex: _indexAtual,
-          items: const <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-                icon: Icon(Icons.medication), label: 'Medicamento'),
-            BottomNavigationBarItem(
-                icon: Icon(Icons.home), label: 'So teste mesmo'),
-
-
-          ],
-          onTap: (index){
-            setState(() {
-              _indexAtual = index;
-            });
-          },
-          selectedItemColor: Colors.red,
-        ),
-        endDrawer: MenuLateralWidget(usuario: widget.usuario),
         floatingActionButton: Container(
           padding: const EdgeInsets.only(left: 32, top: 0, right: 0, bottom: 0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               InkWell(
-              onLongPress: () {
-
-              },
               child: FloatingActionButton.extended(
+                heroTag: 'botaoEdt',
                 onPressed: () {
-
-                  daoAlarme.selectAgenda();
-                  print(alarmenovo);
-
-                  // Navigator.push(context, ModalAlarme(builder: (context) => NovoAlarme(usuario: widget.usuario)));
+                  // daoAlarme.selectAgenda();
+                  // print(alarmenovo);
+                  print(listMedicamentos);
+                  print(listMedicamentos[2].nome);
+                  Navigator.push(context, ModalAlarme(builder: (context) => EditarAlarme(usuario: widget.usuario)));
+                  listarAgendaUsuario(widget.usuario?.idUsuario);
 
                 },
-                label: const Text('Editar    '),
+                label: const Text('Editar  '),
                 icon: const Icon(Icons.create_rounded),
                 backgroundColor: (Colors.red),
               ),
             ),
               InkWell(
-              onLongPress: () {
-
-              },
               child: FloatingActionButton.extended(
+
+                heroTag: 'botaoAdd',
                 onPressed: () {
-
+                  print(widget.usuario?.idUsuario);
                   Navigator.push(context, ModalAlarme(builder: (context) => NovoAlarme(usuario: widget.usuario)));
-
-                  // Navigator.of(context).push(ModalAlarme(builder:(context) => NovoAlarme(usuario: widget.usuario))).then((value) => setState((){}));
-                  // Navigator.of(context).pushNamed("/novoAlarme").
                 },
                 label: const Text('Adicionar'),
                 icon: const Icon(Icons.add),
@@ -196,13 +177,12 @@ class _TelaAlarmeState extends State<TelaAlarme> {
                               ),
                               child: InkWell(
                                   onTap: (){
-                                    Navigator.push(context, ModalAlarme(builder: (context) => confirmacao(alarme: alarmes[index],)));
-                                    print(alarmes[index].idAlarme);
+                                    Navigator.push(context, ModalAlarme(builder: (context) => confirmacao(usuario: widget.usuario,alarme: alarmes[index],)));
                                   },
                                 onLongPress: () {
                                     setState(() {
                                       // cancel = await AndroidAlarmManager.cancel(idAlarme!);
-                                      daoAlarme.deletarAlarme(alarmes[index].idAlarme!);
+
                                       listarAgenda();
                                     });
 
@@ -218,15 +198,16 @@ class _TelaAlarmeState extends State<TelaAlarme> {
 
                                         Row(
                                           children: [
-                                            Icon(Icons.add_box_outlined),
+                                            // Icon(Icons.add_box_outlined),
                                             SizedBox(width: 8),
                                             Text(
-                                              '${alarmes[index].idMedicamento}',
+                                              '${listMedicamentos[alarmes[index].idMedicamento! -1].nome}',
+                                               // 'teste',
                                               style: TextStyle(),
                                             ),
                                           ],
                                         ),
-                                        Text('teste'),
+                                        Text('${listMedicamentos[alarmes[index].idMedicamento! -1].dosagem}'),
                                         Icon(
                                           Icons.keyboard_arrow_down,
                                           size: 32,
@@ -238,13 +219,13 @@ class _TelaAlarmeState extends State<TelaAlarme> {
                                             MainAxisAlignment.spaceBetween,
                                         children: [
                                           Text(
-                                            '${alarmes[index].hora}' + ':' + '${alarmes[index].minuto}',
+                                            '${alarmes[index].hora}:${alarmes[index].minuto}',
                                             style: TextStyle(
                                                 fontSize: 32,
                                                 fontWeight: FontWeight.w700),
                                           ),
                                           Text(
-                                            'Faltam ' + '${alarmes[index].quantidade} ' +  'itens',
+                                            'Faltam ${alarmes[index].quantidade} itens',
                                             style: TextStyle(
                                               fontSize: 16,
                                             ),
@@ -253,7 +234,7 @@ class _TelaAlarmeState extends State<TelaAlarme> {
                                     Row(
                                         mainAxisAlignment:
                                             MainAxisAlignment.spaceBetween,
-                                        children: [
+                                        children: const [
                                           Text(
                                             'Periodo: Todos os dias',
                                             style: TextStyle(),

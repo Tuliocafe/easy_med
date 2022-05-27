@@ -3,6 +3,7 @@ import 'package:easy_med/database/dao/usuario_dao.dart';
 import 'package:easy_med/model/usuario.dart';
 import 'package:easy_med/telas/tela_alarme.dart';
 import 'package:easy_med/telas/tela_confirmacao.dart';
+import 'package:easy_med/telas/tela_principal.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -213,9 +214,7 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
           try {
             registrar().then((value) => getUser(email.text)
                 .then((value) => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => TelaAlarme(
-                          usuario: usuario,
-                        )))));
+                    builder: (context) => TelaPrincipal(usuario: usuario)))));
             // ainda preciso validar o tipo
           } catch (e) {}
         } else {

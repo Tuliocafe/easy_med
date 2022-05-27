@@ -3,6 +3,7 @@ import 'package:easy_med/database/dao/alarme_dao.dart';
 import 'package:easy_med/database/dao/usuario_dao.dart';
 import 'package:easy_med/telas/tela_alarme.dart';
 import 'package:easy_med/telas/tela_notificacao.dart';
+import 'package:easy_med/telas/tela_principal.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
@@ -70,6 +71,7 @@ class _NovoAlarmeState extends State<NovoAlarme> {
   }
 
   Future registraAlarme() async {
+  // print(widget.usuario?.idUsuario);
     try {
       await daoAlarme.salvarAlarme(Alarme(
         nome: nomeAlarme.text,
@@ -185,6 +187,8 @@ class _NovoAlarmeState extends State<NovoAlarme> {
                           shape: StadiumBorder(),
                         ),
                         onPressed: () async {
+                          // print(widget.usuario);
+
                           // date time format (year,month,date,hour,minutes,seconds)
                           try {
                             registraAlarme().then((value) =>
@@ -211,7 +215,9 @@ class _NovoAlarmeState extends State<NovoAlarme> {
                                     //         int.parse(horaAlarme.text),
                                     //         int.parse(minutoAlarme.text)))
                                           )));
-                            Navigator.of(context).pop(context);
+                            Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
+                                builder: (context) => TelaPrincipal(usuario: widget.usuario)),
+                          (route) => false);
                             // await Navigator.of(context).push(MaterialPageRoute(
                             //     builder: (context) => TelaAlarme(
                             //           usuario: widget.usuario,

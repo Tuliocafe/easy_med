@@ -34,48 +34,22 @@ class TelaAlarmeTeste extends StatefulWidget {
 
 class _TelaAlarmeState extends State<TelaAlarmeTeste> {
   Alarme? alarme;
+  Usuario? usuario;
   Medicamento? medicamento;
   final medicamentoDao daoMedicamento = medicamentoDao();
   final alarmeDao daoAlarme = alarmeDao();
+  late int id;
 
-  String? email;
-  int contador = 0;
-  List<Alarme> alarmes = [];
-  String? dosagem;
-  List<Map> alarmenovo = [];
-
-  // Future getMedicamento() async {
-  //   final medicamento = await daoMedicamento.getMedicamento();
-  //
-  //   setState(() {
-  //     this.medicamento = medicamento;
-  //   });
-  // }
   @override
   initState(){
     super.initState();
-    listarAgenda();
-    listarAgenda2();
-
+    int id = 1;
+    this.id = id;
   }
 
-  Future listarAgenda() async{
-    final alarme = await daoAlarme.getAlarmeBD();
-    setState(() {
-      this.alarmes = alarme;
-    });
-    return Future.delayed(Duration(seconds: 0));
-  }
-
-  Future listarAgenda2() async{
-    final alarme2 = await daoAlarme.selectAgenda();
-    setState(() {
-      alarmenovo = alarme2;
-    });
-    return Future.delayed(Duration(seconds: 0));
-  }
 
   int _indexAtual = 0;
+
 
   final telas = [
     TelaAlarme(),
@@ -84,12 +58,10 @@ class _TelaAlarmeState extends State<TelaAlarmeTeste> {
 
   @override
   Widget build(BuildContext context) {
-    email = widget.usuario?.email;
     // listarAgenda();
     // widget.alarmes
     //     .add(AlarmeInfo(medicamento: 'PredSim', hora: '15', minuto: '30'));
     return Scaffold(
-
       // backgroundColor: Colors.black,
         appBar: AppBar(
           title: const Text('Alarmes'),
@@ -99,11 +71,9 @@ class _TelaAlarmeState extends State<TelaAlarmeTeste> {
           currentIndex: _indexAtual,
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
-                icon: Icon(Icons.medication), label: 'Medicamento'),
+                icon: Icon(Icons.home), label: 'Alarme'),
             BottomNavigationBarItem(
-                icon: Icon(Icons.home), label: 'So teste mesmo'),
-
-
+                icon: Icon(Icons.medication), label: 'Medicamento'),
           ],
           onTap: (index){
             setState(() {
@@ -112,49 +82,8 @@ class _TelaAlarmeState extends State<TelaAlarmeTeste> {
           },
           selectedItemColor: Colors.red,
         ),
-        endDrawer: MenuLateralWidget(usuario: widget.usuario),
-        floatingActionButton: Container(
-          padding: const EdgeInsets.only(left: 32, top: 0, right: 0, bottom: 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              InkWell(
-                onLongPress: () {
+        // endDrawer: MenuLateralWidget(usuario: widget.usuario),
 
-                },
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-
-                    daoAlarme.selectAgenda();
-                    print(alarmenovo);
-
-                    // Navigator.push(context, ModalAlarme(builder: (context) => NovoAlarme(usuario: widget.usuario)));
-
-                  },
-                  label: const Text('Editar    '),
-                  icon: const Icon(Icons.create_rounded),
-                  backgroundColor: (Colors.red),
-                ),
-              ),
-              InkWell(
-                onLongPress: () {
-
-                },
-                child: FloatingActionButton.extended(
-                  onPressed: () {
-
-                    Navigator.push(context, ModalAlarme(builder: (context) => NovoAlarme(usuario: widget.usuario)));
-
-                    // Navigator.of(context).push(ModalAlarme(builder:(context) => NovoAlarme(usuario: widget.usuario))).then((value) => setState((){}));
-                    // Navigator.of(context).pushNamed("/novoAlarme").
-                  },
-                  label: const Text('Adicionar'),
-                  icon: const Icon(Icons.add),
-                  backgroundColor: (Colors.red),
-                ),
-              ),
-            ], ),
-        ),
     );
   }
 }

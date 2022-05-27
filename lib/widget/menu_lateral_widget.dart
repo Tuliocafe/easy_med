@@ -3,55 +3,61 @@ import 'package:easy_med/servico/servico_cadastro.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../main.dart';
 import '../telas/tela_alarme.dart';
 import '../telas/tela_login.dart';
 import '../telas/tela_notificacao.dart';
 
 class MenuLateralWidget extends StatelessWidget {
   Usuario? usuario;
-  final padding = EdgeInsets.symmetric(horizontal: 20);
+  // final padding = EdgeInsets.symmetric(horizontal: 20);
 
-  MenuLateralWidget({Key? key, this.usuario}) : super(key: key);
+
+  MenuLateralWidget({this.usuario,Key? key,}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // ServicoCadastro usuario = Provider.of<ServicoCadastro>(context);
-    return Drawer(
-        child: Column(
-      children: [
-        UserAccountsDrawerHeader(
-            accountName: Text('${usuario?.nome}'),
-            accountEmail: Text('${usuario?.email}')),
-        itemMenuLateral(
-            text: 'Menu Especial',
-            icon: Icons.vpn_key,
-            onClicked: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => notificacao(usuario: usuario)));
-            }),
-        itemMenuLateral(
-            text: 'Tela de Alarme',
-            icon: Icons.access_alarm,
-            onClicked: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => TelaAlarme(usuario: usuario,)));
-            }),
-        itemMenuLateral(
-            text: 'Sair',
-            icon: Icons.logout,
-            onClicked: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) => telalogin()));
-              // Navigator.popUntil(ModalRoute.withName('/telalogin'), (route) => false);
-            }),
-      ],
+      return Drawer(
+          child: Column(
+        children: [
+          UserAccountsDrawerHeader(
+              accountName: Text('${usuario?.nome}'),
+              accountEmail: Text('${usuario?.email}')),
+          itemMenuLateral(
+              text: 'Menu Especial',
+              icon: Icons.vpn_key,
+              onClicked: () {
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => notificacao(usuario: usuario,)));
+              }),
+          itemMenuLateral(
+              text: 'Tela de Alarme',
+              icon: Icons.access_alarm,
+              onClicked: () {
+                print(usuario);
 
-      // leading: Icon(Icons.logout),
-      // title: Text('Sair'),
-      // hoverColor: Colors.red,
-      // onTap: (){
-      //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => telalogin()));
-    ));
+                // Navigator.of(context).push(MaterialPageRoute(
+                //     builder: (context) => TelaAlarme(
+                //           usuario: usuario,
+                //         )));
+              }),
+          itemMenuLateral(
+              text: 'Sair',
+              icon: Icons.logout,
+              onClicked: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) => telalogin()));
+                // Navigator.popUntil(ModalRoute.withName('/telalogin'), (route) => false);
+              }),
+        ],
+
+        // leading: Icon(Icons.logout),
+        // title: Text('Sair'),
+        // hoverColor: Colors.red,
+        // onTap: (){
+        //   Navigator.of(context).push(MaterialPageRoute(builder: (context) => telalogin()));
+      ));
+
 
     //pode colocar cor diferente aqui
   }

@@ -12,26 +12,13 @@ class cadastroMedicameto extends StatefulWidget {
 }
 
 class _cadastroUsuarioState extends State<cadastroMedicameto> {
-  // Usuario? usuario;
   final medicamentoDao daoMedicamento = medicamentoDao();
   final formKey = GlobalKey<FormState>();
 
-  // List<String> listasexo = ['Masculino', 'Faminino', 'Não Informado'];
-  // List<Usuario> listaemail = [];
-  // String? sexoSelecionado;
   bool loading = false;
   final nome = TextEditingController();
   final dosagem = TextEditingController();
   final laboratorio = TextEditingController();
-
-
-  // Future getUser(email) async {
-  // final usuario = await daoUsuario.getUsuarioBD(email);
-
-  //   setState(() {
-  //     this.usuario = usuario;
-  //   });
-  // }
 
   // late TextEditingController controllerNome;
   // late TextEditingController controllerEmail;
@@ -67,178 +54,109 @@ class _cadastroUsuarioState extends State<cadastroMedicameto> {
 
   Future registrar() async {
     setState(() => loading = true);
-    try {
-      await context
-          .read<ServicoAutenticacao>()
-          .registrar(nome.text, dosagem.text, laboratorio.text);
       await daoMedicamento.salvarMedicamento(Medicamento(
         nome: nome.text,
         dosagem: dosagem.text,
         laboratorio: laboratorio.text,
       ));
-    } on ExceptionAutenticacao catch (e) {
-      setState(() => loading = false);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message)));
-    }
+      nome.clear();
+      dosagem.clear();
+      laboratorio.clear();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.red,
-        title: const Text('Cadastro Medicamento'),
-        centerTitle: true,
-      ),
       body: Center(
           child: ListView(
-            // shrinkWrap: true,
+              // shrinkWrap: true,
               padding: EdgeInsets.all(32),
               children: [
-                Form(
-                    key: formKey,
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      buildNome(),
-                      const SizedBox(
-                        height: 16,
-                        width: 8,
-                      ),
-                      // Row(children: [
-                      //   buildSexo(),
-                      // ]),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      // buildIdade(),
-                      // const SizedBox(
-                      //   height: 16,
-                      // ),
-                      buildEmail(),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      buildSenha(),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      // buildConfirmacaoSenha(),
-                      // const SizedBox(
-                      //   height: 16,
-                      // ),
-                      buildConfirmar(),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                      buildTestar(),
-                      const SizedBox(
-                        height: 16,
-                      ),
-                    ])),
-              ])),
+            Form(
+                key: formKey,
+                child: Column(mainAxisSize: MainAxisSize.min, children: [
+                  buildNome(),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  buildDosagem(),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  buildLaboratorio(),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  buildSalvar(),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                ])),
+          ])),
     );
   }
 
-  Widget buildNome() =>
-      TextFormField(
+  Widget buildNome() => TextFormField(
         controller: nome,
         decoration: const InputDecoration(
           labelText: 'Nome',
           border: OutlineInputBorder(),
         ),
         validator: (value) =>
-        value != null && value.isEmpty ? 'Digite o seu nome' : null,
+            value != null && value.isEmpty ? 'Digite o seu nome' : null,
       );
 
-  Widget buildEmail() =>
-      TextFormField(
+  Widget buildDosagem() => TextFormField(
         controller: dosagem,
         decoration: const InputDecoration(
-          labelText: 'E-mail',
+          labelText: 'Dosagem  ex: 50mg',
           border: OutlineInputBorder(),
         ),
         validator: (value) =>
-        value != null && value.isEmpty ? 'Digite o seu e-mail' : null,
+            value != null && value.isEmpty ? 'Digite o seu e-mail' : null,
       );
 
-  Widget buildSenha() =>
-      TextFormField(
+  Widget buildLaboratorio() => TextFormField(
         keyboardType: TextInputType.visiblePassword,
         controller: laboratorio,
-        obscureText: true,
         decoration: const InputDecoration(
-          labelText: 'Senha',
+          labelText: 'laboratorio',
           border: OutlineInputBorder(),
         ),
         validator: (value) =>
-        value != null && value.isEmpty ? 'Digite sua senha' : null,
+            value != null && value.isEmpty ? 'Digite sua senha' : null,
       );
 
-  // Widget buildConfirmacaoSenha() => TextFormField(
-  //   keyboardType: TextInputType.visiblePassword,
-  //   controller: confirmacaosenha,
-  //   obscureText: true,
-  //   decoration: const InputDecoration(
-  //     labelText: 'Confirmar Senha',
-  //     border: OutlineInputBorder(),
-  //   ),
-  //   validator: (value) =>
-  //   value != null && value.isEmpty ? 'Digite sua senha' : null,
-  // );
-
-  // Widget buildIdade() => TextFormField(
-  //   keyboardType: TextInputType.number,
-  //   controller: idade,
-  //   decoration: const InputDecoration(
-  //     labelText: 'Idade',
-  //     border: OutlineInputBorder(),
-  //   ),
-  //   validator: (value) =>
-  //   value != null && value.isEmpty ? 'Digite sua Idade' : null,
-  // );
-
-  Widget buildConfirmar() {
+  Widget buildSalvar() {
     return ElevatedButton(
-        style: ElevatedButton.styleFrom(
-          primary: Colors.red,
-          minimumSize: Size.fromHeight(50),
-          shape: StadiumBorder(),
-        ),
-        onPressed: () async {
-          // if (laboratorio.text == confirmacaosenha.text) {
-          try {
-            final Cadastrado = SnackBar(
-                content:
-                Text('Medicamento cadastrado com sucesso.'),
-                action: SnackBarAction(
-                  label: 'Recolher',
-                  onPressed: () {},
-                ));
-            registrar().then((value) =>
-                ScaffoldMessenger.of(context).showSnackBar(Cadastrado)
-                // getUser(dosagem.text)
-                //     .then((value) =>
-                //     Navigator.of(context).push(MaterialPageRoute(
-                //         builder: (context) =>
-                //             TelaAlarme(
-                //               // usuario: usuario,
-                //             )
-            );
-            // ainda preciso validar o tipo
-          } catch (e) {
-            final snackBar = SnackBar(
-                content:
-                Text('Erro ${e}.'),
-                action: SnackBarAction(
-                  label: 'Recolher',
-                  onPressed: () {},
-                ));
-            ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          }
-          // }
-        },
-        child: const Text('Salvar'),
-      // );
+      style: ElevatedButton.styleFrom(
+        primary: Colors.red,
+        minimumSize: Size.fromHeight(50),
+        shape: StadiumBorder(),
+      ),
+      onPressed: () async {
+        // if (laboratorio.text == confirmacaosenha.text) {
+        try {
+          final Cadastrado = SnackBar(
+              content: Text('Medicamento cadastrado com sucesso.'),
+              action: SnackBarAction(
+                label: 'Recolher',
+                onPressed: () {},
+              ));
+          registrar().then(
+              (value) => ScaffoldMessenger.of(context).showSnackBar(Cadastrado)
+              );
+        } catch (e) {
+          final snackBar = SnackBar(
+              content: Text('Erro ${e}.'),
+              action: SnackBarAction(
+                label: 'Recolher',
+                onPressed: () {},
+              ));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
+      },
+      child: const Text('Salvar'),
     );
   }
 
@@ -251,8 +169,6 @@ class _cadastroUsuarioState extends State<cadastroMedicameto> {
       ),
       onPressed: () async {
         try {
-          // findAll().then((usuarios) => print(usuarios));
-          // ainda preciso validar o tipo
         } catch (e) {
           final snackBar = SnackBar(
             content: const Text(

@@ -1,19 +1,17 @@
 import 'package:easy_med/database/dao/medicamento_dao.dart';
 import 'package:easy_med/telas/tela_alarme.dart';
+
 import 'package:easy_med/telas/tela_cadastro_usuario.dart';
-import 'package:easy_med/telas/tela_notificacao.dart';
-import 'package:easy_med/telas/teste_tela_alarme.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:easy_med/telas/tela_principal.dart';
+
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
 
-import '../api/notificacao_api.dart';
-import '../database/app_database.dart';
+
 import '../database/dao/alarme_dao.dart';
 import '../database/dao/usuario_dao.dart';
-import '../model/alarme.dart';
-import '../model/medicamento.dart';
+
 import '../model/usuario.dart';
 import '../servico/servico_autenticacao.dart';
 import '../servico/servico_autenticacao_google.dart';
@@ -45,7 +43,6 @@ class _telaloginState extends State<telalogin> {
 
   void initState() {
     super.initState();
-    listenNotifications();
   }
 
   Future getUser(emailvalidador) async {
@@ -65,38 +62,6 @@ class _telaloginState extends State<telalogin> {
 
   }
 
-  void listenNotifications() {
-    NotificationService.onNotifications.stream.listen(onClickNotification);
-  }
-
-  void onClickNotification(String? payload) {
-    Navigator.of(context)
-        .push(MaterialPageRoute(builder: (context) => notificacao()));
-  }
-
-  // late TextEditingController controllerValidarEmail;
-  // late TextEditingController controllerValidarSenha;
-  //
-  // @override
-  // void didUpdateWidget(covariant telalogin oldWidget) {
-  //   super.didUpdateWidget(oldWidget);
-  //   initUser();
-  //
-  // }
-  //
-  // void initState() {
-  //   super.initState();
-  // }
-  //
-  // void initUser() {
-  //   final email = widget.usuario == null ? '' : widget.usuario!.email;
-  //   final senha = widget.usuario == null ? '' : widget.usuario!.senha;
-  //
-  //   setState(() {
-  //     controllerValidarEmail = TextEditingController(text: email);
-  //     controllerValidarSenha = TextEditingController(text: senha);
-  //   });
-  // }
 
   login() async {
     setState(() => loading = true);
@@ -198,10 +163,11 @@ class _telaloginState extends State<telalogin> {
                       final isValid = form.validate();
                       if (isValid) {
                         if (email.text == '1') {
-                          getUser(novoemail).then((value) =>
+                          await getUser('tuliocafe@yahoo.com.br').then((value) =>
                               Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) =>
-                                      TelaAlarmeTeste(usuario: usuario))));
+                              builder: (context) =>
+                                  TelaPrincipal(usuario: usuario)))
+                          );
                         } else {
                           valido =  await validar(email.text, senha.text);
                           // try {
@@ -209,10 +175,13 @@ class _telaloginState extends State<telalogin> {
                             // if (valido == true) {
                             //   getUser(email.text).then((value) =>
                             // print('Certo'));
-                            getUser(email.text).then((value) =>
-                            Navigator.of(context).push(MaterialPageRoute(
+                            await getUser(email.text);
+                           await Navigator.of(context).push(MaterialPageRoute(
                                 builder: (context) =>
-                                    TelaAlarme(usuario: usuario))));
+                                    TelaPrincipal(
+                                        usuario: usuario
+                                    ))
+                            );
                           } else {
                             final snackBar = SnackBar(
                                 content: Text(
@@ -289,52 +258,52 @@ class _telaloginState extends State<telalogin> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
-                      minimumSize: Size.fromHeight(50),
-                      shape: StadiumBorder(),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: (loading)
-                          ? [
-                              const Padding(
-                                padding: EdgeInsets.all(16),
-                                child: SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
-                            ]
-                          : [
-                              const FaIcon(
-                                FontAwesomeIcons.google,
-                                color: Colors.red,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Text(
-                                  'Logar com o Google',
-                                  style: TextStyle(
-                                      fontSize: 20, color: Colors.grey),
-                                ),
-                              ),
-                            ],
-                    ),
-                    onPressed: () {
-                      final provider = Provider.of<ServicoAutenticacaoGoogle>(
-                          context,
-                          listen: false);
-                      provider.googleLogin();
-                    },
-                  ),
-                ),
+                // Padding(
+                //   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+                //   child: ElevatedButton(
+                //     style: ElevatedButton.styleFrom(
+                //       primary: Colors.white,
+                //       minimumSize: Size.fromHeight(50),
+                //       shape: StadiumBorder(),
+                //     ),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: (loading)
+                //           ? [
+                //               const Padding(
+                //                 padding: EdgeInsets.all(16),
+                //                 child: SizedBox(
+                //                   width: 24,
+                //                   height: 24,
+                //                   child: CircularProgressIndicator(
+                //                     color: Colors.white,
+                //                   ),
+                //                 ),
+                //               )
+                //             ]
+                //           : [
+                //               const FaIcon(
+                //                 FontAwesomeIcons.google,
+                //                 color: Colors.red,
+                //               ),
+                //               const Padding(
+                //                 padding: EdgeInsets.all(16.0),
+                //                 child: Text(
+                //                   'Logar com o Google',
+                //                   style: TextStyle(
+                //                       fontSize: 20, color: Colors.grey),
+                //                 ),
+                //               ),
+                //             ],
+                //     ),
+                //     onPressed: () {
+                //       final provider = Provider.of<ServicoAutenticacaoGoogle>(
+                //           context,
+                //           listen: false);
+                //       provider.googleLogin();
+                //     },
+                //   ),
+                // ),
                 Padding(
                   padding: EdgeInsets.all(24),
 
