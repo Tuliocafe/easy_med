@@ -99,40 +99,19 @@ class _TelaAlarmeState extends State<TelaAlarme> {
         // backgroundColor: Colors.black,
         floatingActionButton: Container(
           padding: const EdgeInsets.only(left: 32, top: 0, right: 0, bottom: 0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              InkWell(
-              child: FloatingActionButton.extended(
-                heroTag: 'botaoEdt',
-                onPressed: () {
-                  // daoAlarme.selectAgenda();
-                  // print(alarmenovo);
-                  print(listMedicamentos);
-                  print(listMedicamentos[2].nome);
-                  Navigator.push(context, ModalAlarme(builder: (context) => EditarAlarme(usuario: widget.usuario)));
-                  listarAgendaUsuario(widget.usuario?.idUsuario);
+          child: InkWell(
+          child: FloatingActionButton.extended(
 
-                },
-                label: const Text('Editar  '),
-                icon: const Icon(Icons.create_rounded),
-                backgroundColor: (Colors.red),
-              ),
+            heroTag: 'botaoAdd',
+            onPressed: () {
+              print(widget.usuario?.idUsuario);
+              Navigator.push(context, ModalAlarme(builder: (context) => NovoAlarme(usuario: widget.usuario)));
+            },
+            label: const Text('Adicionar'),
+            icon: const Icon(Icons.add),
+            backgroundColor: (Colors.red),
+          ),
             ),
-              InkWell(
-              child: FloatingActionButton.extended(
-
-                heroTag: 'botaoAdd',
-                onPressed: () {
-                  print(widget.usuario?.idUsuario);
-                  Navigator.push(context, ModalAlarme(builder: (context) => NovoAlarme(usuario: widget.usuario)));
-                },
-                label: const Text('Adicionar'),
-                icon: const Icon(Icons.add),
-                backgroundColor: (Colors.red),
-              ),
-            ),
-       ], ),
         ),
         body: Center(
           child: Container(

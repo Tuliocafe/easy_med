@@ -211,21 +211,25 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
       ),
       onPressed: () async {
         if (senha.text == confirmacaosenha.text) {
-          try {
-            registrar().then((value) => getUser(email.text)
-                .then((value) => Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => TelaPrincipal(usuario: usuario)))));
-            // ainda preciso validar o tipo
-          } catch (e) {}
-        } else {
-          final snackBar = SnackBar(
-              content:
-                  const Text('Senha não confere. Favor digitar novamente.'),
-              action: SnackBarAction(
-                label: 'Recolher',
-                onPressed: () {},
-              ));
-          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          final form = formKey.currentState!;
+          final isValid = form.validate();
+          if (isValid) {
+            try {
+              registrar().then((value) => getUser(email.text).then((value) =>
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => TelaPrincipal(usuario: usuario)))));
+              // ainda preciso validar o tipo
+            } catch (e) {}
+          } else {
+            final snackBar = SnackBar(
+                content:
+                    const Text('Senha não confere. Favor digitar novamente.'),
+                action: SnackBarAction(
+                  label: 'Recolher',
+                  onPressed: () {},
+                ));
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          }
         }
       },
       child: const Text('Salvar'),

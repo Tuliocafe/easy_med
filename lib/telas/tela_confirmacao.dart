@@ -1,3 +1,4 @@
+import 'package:easy_med/database/dao/medicamento_dao.dart';
 import 'package:easy_med/model/usuario.dart';
 import 'package:easy_med/telas/tela_edicao_alarme.dart';
 import 'package:easy_med/telas/tela_principal.dart';
@@ -14,6 +15,13 @@ class confirmacao extends StatelessWidget {
   confirmacao({Key? key, this.alarme, this.usuario}) : super(key: key);
 
   final alarmeDao daoAlarme = alarmeDao();
+  final medicamentoDao daoMedicamento = medicamentoDao();
+
+
+  late String nomeMedicamento = daoMedicamento.getMedicamentoId(alarme?.idMedicamento).toString();
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +44,7 @@ class confirmacao extends StatelessWidget {
               ),
               Padding(
                 padding: EdgeInsets.all(16),
-                child: Text('Já usou o produto ${alarme?.idMedicamento} ?',
+                child: Text('Já usou o produto ${nomeMedicamento} ?',
                     style: const TextStyle(
                       fontSize: 23,
                     )),
@@ -66,16 +74,15 @@ class confirmacao extends StatelessWidget {
                       )),
                   Padding(
                       padding: EdgeInsets.all(8),
-                      // child: Text('teste'),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: Colors.red,
                           padding: const EdgeInsets.all(50),
-                          // minimumSize: Size.fromHeight(12),
+
                           shape: StadiumBorder(),
                         ),
                         onPressed: () async {
-                          // print(usuario?.nome);
+
                           Navigator.of(context).pop();
                         },
                         child: const Text('NAO', style: TextStyle(fontSize: 23)),
@@ -84,7 +91,6 @@ class confirmacao extends StatelessWidget {
               ),
               Padding(
                   padding: EdgeInsets.all(50),
-                  // child: Text('teste'),
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       primary: Colors.red,
@@ -93,39 +99,11 @@ class confirmacao extends StatelessWidget {
                       shape: StadiumBorder(),
                     ),
                     onPressed: () async {
-
                           Navigator.push(context, ModalAlarme(builder: (context) => EditarAlarme(usuario: usuario, alarme: alarme)));
-                          // Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
-                          // builder: (context) => TelaPrincipal(usuario: usuario)),
-                          //     (route) => false));
                     },
                     child: const Text('Editar Alarme',
                         style: TextStyle(fontSize: 23)),
                   )),
-              // Padding(
-              //     padding: EdgeInsets.all(64),
-              //
-              //     // child: Text('teste'),
-              //     child: ElevatedButton(
-              //       style: ElevatedButton.styleFrom(
-              //         primary: Colors.red,
-              //         padding: const EdgeInsets.all(16),
-              //         maximumSize: Size.fromRadius(128),
-              //         // minimumSize: Size.fromHeight(12),
-              //         shape: StadiumBorder(),
-              //       ),
-              //       onPressed: () async {
-              //         await daoAlarme.deletarAlarme(alarme?.idAlarme);
-              //         Navigator.of(context).pop();
-              //       },
-              //       child: Row(
-              //         mainAxisAlignment: MainAxisAlignment.center,
-              //           children: const [
-              //             Icon(Icons.delete),
-              //             Text('Excluir alarme', style: TextStyle(fontSize: 23)),
-              //
-              //           ],
-              //     ))),
             ],
           ),
         ),
