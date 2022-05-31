@@ -2,6 +2,7 @@ import 'package:easy_med/database/dao/medicamento_dao.dart';
 import 'package:easy_med/telas/tela_alarme.dart';
 
 import 'package:easy_med/telas/tela_cadastro_usuario.dart';
+import 'package:easy_med/telas/tela_notificacao.dart';
 import 'package:easy_med/telas/tela_principal.dart';
 
 import 'package:flutter/material.dart';
@@ -59,7 +60,6 @@ class _telaloginState extends State<telalogin> {
     }
       else {
         return false;}
-
   }
 
 
@@ -258,52 +258,54 @@ class _telaloginState extends State<telalogin> {
                     ),
                   ),
                 ),
-                // Padding(
-                //   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                //   child: ElevatedButton(
-                //     style: ElevatedButton.styleFrom(
-                //       primary: Colors.white,
-                //       minimumSize: Size.fromHeight(50),
-                //       shape: StadiumBorder(),
-                //     ),
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: (loading)
-                //           ? [
-                //               const Padding(
-                //                 padding: EdgeInsets.all(16),
-                //                 child: SizedBox(
-                //                   width: 24,
-                //                   height: 24,
-                //                   child: CircularProgressIndicator(
-                //                     color: Colors.white,
-                //                   ),
-                //                 ),
-                //               )
-                //             ]
-                //           : [
-                //               const FaIcon(
-                //                 FontAwesomeIcons.google,
-                //                 color: Colors.red,
-                //               ),
-                //               const Padding(
-                //                 padding: EdgeInsets.all(16.0),
-                //                 child: Text(
-                //                   'Logar com o Google',
-                //                   style: TextStyle(
-                //                       fontSize: 20, color: Colors.grey),
-                //                 ),
-                //               ),
-                //             ],
-                //     ),
-                //     onPressed: () {
-                //       final provider = Provider.of<ServicoAutenticacaoGoogle>(
-                //           context,
-                //           listen: false);
-                //       provider.googleLogin();
-                //     },
-                //   ),
-                // ),
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      primary: Colors.white,
+                      minimumSize: Size.fromHeight(50),
+                      shape: StadiumBorder(),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: (loading)
+                          ? [
+                              const Padding(
+                                padding: EdgeInsets.all(16),
+                                child: SizedBox(
+                                  width: 24,
+                                  height: 24,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              )
+                            ]
+                          : [
+                              const FaIcon(
+                                FontAwesomeIcons.google,
+                                color: Colors.red,
+                              ),
+                              const Padding(
+                                padding: EdgeInsets.all(16.0),
+                                child: Text(
+                                  'Logar com o Google',
+                                  style: TextStyle(
+                                      fontSize: 20, color: Colors.grey),
+                                ),
+                              ),
+                            ],
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => notificacao(usuario: usuario,)));
+                      // final provider = Provider.of<ServicoAutenticacaoGoogle>(
+                      //     context,
+                      //     listen: false);
+                      // provider.googleLogin();
+                    },
+                  ),
+                ),
                 Padding(
                   padding: EdgeInsets.all(24),
 

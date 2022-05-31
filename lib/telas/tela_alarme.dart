@@ -156,7 +156,10 @@ class _TelaAlarmeState extends State<TelaAlarme> {
                               ),
                               child: InkWell(
                                   onTap: (){
-                                    Navigator.push(context, ModalAlarme(builder: (context) => confirmacao(usuario: widget.usuario,alarme: alarmes[index],)));
+                                    Navigator.push(context, ModalAlarme(builder: (context) => confirmacao(
+                                      usuario: widget.usuario,
+                                      alarme: alarmes[index],
+                                      nomeMedicamento: listMedicamentos[alarmes[index].idMedicamento! -1].nome.toString(),)));
                                   },
                                 onLongPress: () {
                                     setState(() {

@@ -3,25 +3,40 @@ import 'package:easy_med/model/usuario.dart';
 import 'package:easy_med/telas/tela_edicao_alarme.dart';
 import 'package:easy_med/telas/tela_principal.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import '../database/dao/alarme_dao.dart';
+import '../database/dao/relatorio_dao.dart';
 import '../model/alarme.dart';
+import '../model/relatorio.dart';
 import 'modal_cadastro_alarme.dart';
 
 
 class confirmacao extends StatelessWidget {
   Alarme? alarme;
   Usuario? usuario;
+  String? nomeMedicamento;
 
-  confirmacao({Key? key, this.alarme, this.usuario}) : super(key: key);
+  confirmacao({Key? key, this.alarme, this.usuario, this.nomeMedicamento}) : super(key: key);
 
   final alarmeDao daoAlarme = alarmeDao();
   final medicamentoDao daoMedicamento = medicamentoDao();
+  final relatorioDao daoRelatorio = relatorioDao();
+  // late String data = dataFormatada();
 
+  salvarRegistro(confirmacao)async{
+    await daoRelatorio.salvarRelatorio(Relatorio(
+      idAlarme: alarme?.idAlarme,
+      dataRegistro: await dataFormatada(),
+      confirmacaoUso: confirmacao
+    ));
+  }
 
-  late String nomeMedicamento = daoMedicamento.getMedicamentoId(alarme?.idMedicamento).toString();
-
-
-
+  dataFormatada(){
+    final DateTime dataatual =  DateTime.now();
+    final DateFormat formatter =  DateFormat('d-M-y H:m');
+    final String formatted =  formatter.format(dataatual);
+    return formatted.toString();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +79,7 @@ class confirmacao extends StatelessWidget {
                         ),
                         onPressed: () async {
                           int? novaquantidade = await (alarme?.quantidade)! - 1;
+                          await salvarRegistro('sim');
                           await daoAlarme
                               .updateQuantidade(alarme?.idAlarme, novaquantidade)
                               .then((value) =>  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
@@ -78,11 +94,10 @@ class confirmacao extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           primary: Colors.red,
                           padding: const EdgeInsets.all(50),
-
                           shape: StadiumBorder(),
                         ),
                         onPressed: () async {
-
+                          await salvarRegistro('nao');
                           Navigator.of(context).pop();
                         },
                         child: const Text('NAO', style: TextStyle(fontSize: 23)),

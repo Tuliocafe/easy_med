@@ -1,4 +1,5 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
+import 'package:easy_med/database/dao/relatorio_dao.dart';
 import 'package:easy_med/database/dao/usuario_dao.dart';
 import 'package:easy_med/examples/alarm_manger_exmples.dart';
 import 'package:easy_med/telas/tela_cadastro_usuario.dart';
@@ -11,11 +12,13 @@ import '../database/dao/alarme_dao.dart';
 import '../database/dao/medicamento_dao.dart';
 import '../model/alarme.dart';
 import '../model/medicamento.dart';
+import '../model/relatorio.dart';
 import '../model/usuario.dart';
 import '../widget/menu_lateral_widget.dart';
 
 class notificacao extends StatefulWidget {
   final Usuario? usuario;
+
 
   // final String? payload;
   const notificacao({Key? key, this.usuario}) : super(key: key);
@@ -33,10 +36,22 @@ class _notificacaoState extends State<notificacao> {
   final medicamentoDao daoMedicamento = medicamentoDao();
   final alarmeDao daoAlarme = alarmeDao();
   final usuarioDao daoUsuario = usuarioDao();
+  final relatorioDao daoRelatorio = relatorioDao();
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   NotificationService _notificationService = NotificationService();
   bool isOn = false;
   int alarmId = 3;
+  List<Map> relatorio = [];
+
+  //
+  // Future IncluirRelatorio() async{
+  //   final relatorio = await daoRelatorio.findAll1();
+  //
+  //   setState(() {
+  //     this.relatorio = relatorio;
+  //   });
+  // }
+
 
   Future getMedicamento() async {
     final medicamento =
@@ -69,15 +84,12 @@ class _notificacaoState extends State<notificacao> {
 
   @override
   Widget build(BuildContext context) {
-    email = widget.usuario?.email;
     return Scaffold(
       appBar: AppBar(
         title: Text('Cadastro Especial'),
         centerTitle: true,
       ),
-      endDrawer: MenuLateralWidget(
-          usuario: widget.usuario
-      ),
+      endDrawer: MenuLateralWidget(usuario: widget.usuario),
       body: Center(
         child: Column(children: <Widget>[
           Padding(
@@ -92,16 +104,48 @@ class _notificacaoState extends State<notificacao> {
               padding: EdgeInsets.all(16),
               child: ElevatedButton(
                 onPressed: () async {
+                  daoMedicamento.salvarMedicamento(Medicamento(
+                      nome: 'Dorflex',
+                      dosagem: '1g',
+                      laboratorio: 'De nos todos'));
+                  daoMedicamento.salvarMedicamento(Medicamento(
+                      nome: 'Dipirona',
+                      dosagem: '1g',
+                      laboratorio: 'Neo Quimica'));
+                  daoMedicamento.salvarMedicamento(Medicamento(
+                      nome: 'Loratadina',
+                      dosagem: '10mg',
+                      laboratorio: 'Prati Donaduzzi'));
+                  daoMedicamento.salvarMedicamento(Medicamento(
+                      nome: 'Meloxicam',
+                      dosagem: '15mg',
+                      laboratorio: 'Medquimica'));
+                  daoMedicamento.salvarMedicamento(Medicamento(
+                      nome: 'Albendazol',
+                      dosagem: '400mg',
+                      laboratorio: 'Prati Donaduzzi'));
 
-                  daoMedicamento.salvarMedicamento(Medicamento(nome: 'Dorflex', dosagem: '1g', quantidade: 30, laboratorio: 'De nos todos'));
-                  daoMedicamento.salvarMedicamento(Medicamento(nome: 'Dipirona', dosagem: '1g', quantidade: 30, laboratorio: 'Neo Quimica'));
-                  daoMedicamento.salvarMedicamento(Medicamento(nome: 'Loratadina', dosagem: '10mg', quantidade: 30, laboratorio: 'Prati Donaduzzi'));
-                  daoMedicamento.salvarMedicamento(Medicamento(nome: 'Meloxicam', dosagem: '15mg', quantidade: 5, laboratorio: 'Medquimica'));
-                  daoMedicamento.salvarMedicamento(Medicamento(nome: 'Albendazol',  dosagem: '400mg', quantidade: 3, laboratorio: 'Prati Donaduzzi'));
-
-                  daoUsuario.salvarUsuario(Usuario(nome: 'Tulio Cafe', sexo: 'masculino',idade: 31, email: 'tuliocafe@yahoo.com.br', senha: '123',tipo: 'normal'));
+                  daoUsuario.salvarUsuario(Usuario(
+                      nome: 'Tulio Cafe',
+                      sexo: 'masculino',
+                      idade: 39,
+                      email: 'tuliocafe@yahoo.com.br',
+                      senha: '123456',
+                      tipo: 'normal'));
                 },
                 child: Text('Cadastrar Medicamentos e Usuario Padrao'),
+              )),
+          Padding(
+              padding: EdgeInsets.all(16),
+              child: ElevatedButton(
+                onPressed: () async {
+
+
+                   // var relatoio = daoRelatorio.findAllRelatorio();
+                   // print(relatoio);
+
+                },
+                child: Text('Botao de teste'),
               )),
 
           // Padding(
@@ -127,10 +171,6 @@ class _notificacaoState extends State<notificacao> {
           //     },
           //   ),
           // ),
-          Padding(
-            padding: EdgeInsets.all(16),
-            child: Text(email!),
-          ),
         ]),
       ),
     );
@@ -149,7 +189,6 @@ notifica() async {
   await notifica.init();
   await notifica.showNotifications(
       ultimoAlarme.idAlarme!, ultimoAlarme.idMedicamento.toString());
-
 }
 
 navega() {

@@ -148,9 +148,11 @@ class _NovoAlarmeState extends State<NovoAlarme> {
                           border: OutlineInputBorder(),
                         ),
                         cursorColor: Colors.white,
-                        validator: (value) {
-                          if (value!.isEmpty) {
+                        validator: (valor) {
+                          if (valor!.isEmpty) {
                             return 'Favor prencher os 2 digitos';
+                          } else if (int.parse(valor) >= 24) {
+                            return 'Valor deve ser menor que 24';
                           }
                           return null;
                         },
@@ -168,10 +170,13 @@ class _NovoAlarmeState extends State<NovoAlarme> {
                           border: OutlineInputBorder(),
                         ),
                         cursorColor: Colors.white,
-                        validator: (valorMin) {
-                          if (valorMin?.length != 2) {
+                        validator: (valor) {
+                          if (valor?.length != 2) {
                             return 'Favor prencher os 2 digitos';
+                          } else if (int.parse(valor!) >= 60) {
+                            return 'Valor precisa ser menor que 60';
                           }
+
                           return null;
                         },
                       ),

@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:easy_med/model/alarme.dart';
 import 'package:sqflite/sqflite.dart';
 import '../app_database.dart';
@@ -37,7 +35,6 @@ class alarmeDao {
     }).toList();
   }
 
-  // db.delete("Client", where: "id = ?", whereArgs: [id]);
   deletarAlarme(int? id) async {
     final Database db = await getDatabase();
     db.delete('alarme', where: 'idAlarme = $id');
@@ -60,7 +57,6 @@ class alarmeDao {
     final Database db = await getDatabase();
     await db.rawUpdate(
         'UPDATE alarme SET quantidade = $quantidade WHERE idAlarme = $idalarme');
-    // return Alarme.fromJson(lista);
   }
 
   updateNome(idalarme, nome) async {
@@ -75,7 +71,7 @@ class alarmeDao {
     final Database db = await getDatabase();
     final lista = await db.rawQuery('SELECT alarme.idAlarme, alarme.idUsuario, '
         'alarme.nome, alarme.hora, alarme.minuto, medicamento.nome, medicamento.dosagem'
-        ' FROM alarme INNER JOIN medicamento ON alarme.idMedicamento = alarme.idMedicamento');
+        ' FROM alarme INNER JOIN medicamento ON alarme.idMedicamento = medicamento.idMedicamento');
 
     print(lista);
     return lista;

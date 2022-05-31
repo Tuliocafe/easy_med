@@ -245,6 +245,7 @@ class _cadastroUsuarioState extends State<cadastroUsuario> {
       ),
       onPressed: () async {
         try {
+          apagabanco();
           // findAll().then((usuarios) => print(usuarios));
           // ainda preciso validar o tipo
         } catch (e) {

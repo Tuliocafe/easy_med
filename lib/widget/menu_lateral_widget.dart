@@ -1,5 +1,6 @@
 import 'package:easy_med/model/usuario.dart';
 import 'package:easy_med/servico/servico_cadastro.dart';
+import 'package:easy_med/telas/tela_relatorio.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -31,15 +32,15 @@ class MenuLateralWidget extends StatelessWidget {
                     builder: (context) => notificacao(usuario: usuario,)));
               }),
           itemMenuLateral(
-              text: 'Tela de Alarme',
-              icon: Icons.access_alarm,
+              text: 'Relatorio',
+              icon: Icons.description,
               onClicked: () {
-                print(usuario);
 
-                // Navigator.of(context).push(MaterialPageRoute(
-                //     builder: (context) => TelaAlarme(
-                //           usuario: usuario,
-                //         )));
+
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => TelaRelatorio(
+                          usuario: usuario,
+                        )));
               }),
           itemMenuLateral(
               text: 'Sair',
