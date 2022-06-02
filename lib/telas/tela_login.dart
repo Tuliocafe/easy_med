@@ -1,22 +1,10 @@
 import 'package:easy_med/database/dao/medicamento_dao.dart';
-import 'package:easy_med/telas/tela_alarme.dart';
-
 import 'package:easy_med/telas/tela_cadastro_usuario.dart';
-import 'package:easy_med/telas/tela_notificacao.dart';
 import 'package:easy_med/telas/tela_principal.dart';
-
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-
-
 import '../database/dao/alarme_dao.dart';
 import '../database/dao/usuario_dao.dart';
-
 import '../model/usuario.dart';
-import '../servico/servico_autenticacao.dart';
-import '../servico/servico_autenticacao_google.dart';
-import '../servico/servico_cadastro.dart';
 
 class telalogin extends StatefulWidget {
   final Usuario? usuario;
@@ -33,14 +21,12 @@ class _telaloginState extends State<telalogin> {
   final medicamentoDao daoMedicamento = medicamentoDao();
   final usuarioDao daoUsuario = usuarioDao();
   final alarmeDao daoAlarme = alarmeDao();
-
   final formKey = GlobalKey<FormState>();
 
-  bool valido = false;
   final email = TextEditingController();
   final senha = TextEditingController();
-  final String novoemail = 'tuliocafe@yahoo.com.br';
   bool loading = false;
+  bool valido = false;
 
   void initState() {
     super.initState();
@@ -57,26 +43,14 @@ class _telaloginState extends State<telalogin> {
   validar(email, senha) async {
     if (await daoUsuario.validarEmailSenha(email, senha) == true) {
       return true;
-    }
-      else {
-        return false;}
-  }
-
-
-  login() async {
-    setState(() => loading = true);
-    try {
-      await context.read<ServicoAutenticacao>().login(email.text, senha.text);
-    } on ExceptionAutenticacao catch (e) {
-      setState(() => loading = false);
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text(e.message)));
+    } else {
+      return false;
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
-    // ServicoCadastro usuario = Provider.of<ServicoCadastro>(context);
     return Scaffold(
       appBar: AppBar(
         title: Text('Bem Vindo'),
@@ -148,87 +122,39 @@ class _telaloginState extends State<telalogin> {
                       shape: StadiumBorder(),
                     ),
                     onPressed: () async {
-                      // print(controllerValidarEmail.text);
-                      // print(controllerValidarSenha.text);
-                      // List<Usuario> usuario = getUsuario('tuliocafe@teste.com.br');
-                      // Future <List<Map>> usuario = getUsuario('tuliocafe@teste.com.br');
-                      // getUsuario('tuliocafe@teste.com.br');
-                      //  = readAll('tuliocafe@teste.com.br');
-                      // print(teste);
-                      // try aweit getUser();
 
-                      daoUsuario.getAllUsuario();
+                      // daoUsuario.getAllUsuario();
 
                       final form = formKey.currentState!;
                       final isValid = form.validate();
                       if (isValid) {
-                        if (email.text == '1') {
-                          await getUser('tuliocafe@yahoo.com.br').then((value) =>
-                              Navigator.of(context).push(MaterialPageRoute(
+                        // if (email.text == '1') {
+                        //   await getUser('tuliocafe@yahoo.com.br').then((value) =>
+                        //       Navigator.of(context).push(MaterialPageRoute(
+                        //       builder: (context) =>
+                        //           TelaPrincipal(usuario: usuario)))
+                        //   );
+                        // } else {
+                        valido = await validar(email.text, senha.text);
+                        // try {
+                        if (valido == true) {
+                          // if (valido == true) {
+                          //   getUser(email.text).then((value) =>
+                          // print('Certo'));
+                          await getUser(email.text);
+                          await Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>
-                                  TelaPrincipal(usuario: usuario)))
-                          );
+                                  TelaPrincipal(usuario: usuario)));
                         } else {
-                          valido =  await validar(email.text, senha.text);
-                          // try {
-                          if (valido == true) {
-                            // if (valido == true) {
-                            //   getUser(email.text).then((value) =>
-                            // print('Certo'));
-                            await getUser(email.text);
-                           await Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    TelaPrincipal(
-                                        usuario: usuario
-                                    ))
-                            );
-                          } else {
-                            final snackBar = SnackBar(
-                                content: Text(
-                                    'Email ou senha invalido.'),
-                                action: SnackBarAction(
-                                  label: 'Recolher',
-                                  onPressed: () {},
-                                ));
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          }
+                          final snackBar = SnackBar(
+                              content: Text('Email ou senha invalido.'),
+                              action: SnackBarAction(
+                                label: 'Recolher',
+                                onPressed: () {},
+                              ));
+                          ScaffoldMessenger.of(context).showSnackBar(snackBar);
                         }
-                        // } catch (e) {
-                        //   print('email nao cadastrado');
-                        // }
                       }
-                      // }
-
-                      // getUser(email.text).then((value) => Navigator.of(context).push(MaterialPageRoute(builder: (context) => alarme(usuario: usuario))));
-                      // print(usuario);
-                      // Navigator.of(context).push(MaterialPageRoute(builder: (context) => notificacao(usuario: usuario)));
-
-                      // print(usuario);
-
-                      // apagabanco();
-
-                      // daoMedicamento.salvarMedicamento(Medicamento(nome: 'Dorflex', dosagem: '1g', quantidade: 30, laboratorio: 'De nos todos'));
-                      // daoMedicamento.salvarMedicamento(Medicamento(nome: 'Dipirona', dosagem: '1g', quantidade: 30, laboratorio: 'Neo Quimica'));
-                      // daoMedicamento.salvarMedicamento(Medicamento(nome: 'Loratadina', dosagem: '10mg', quantidade: 30, laboratorio: 'Prati Donaduzzi'));
-                      // daoMedicamento.salvarMedicamento(Medicamento(nome: 'Meloxicam', dosagem: '15mg', quantidade: 5, laboratorio: 'Medquimica'));
-                      // daoMedicamento.salvarMedicamento(Medicamento(nome: 'Albendazol',  dosagem: '400mg', quantidade: 3, laboratorio: 'Prati Donaduzzi'));
-                      //
-                      // daoUsuario.salvarUsuario(Usuario(nome: 'Tulio Cafe', sexo: 'masculino',idade: 31, email: 'tuliocafe@yahoo.com.br', senha: '123',tipo: 'normal'));
-                      // daoAlarme.salvarAlarme(Alarme(idUsuario: 1, idMedicamento: 1, nome: 'Alarme Primeiro' ,hora: '9', minuto: '30' ));
-                      // daoAlarme.getAlarmeBD();
-                      // daoUsuario.getAllUsuario();
-                      // daoMedicamento.getMedicamento();
-
-                      // createDatabase();
-                      // alterar();
-                      // print(db.query('usuario'))
-                      // findAll().then((usuarios) => print(usuarios.toString()));
-                      // validarEmailSenha(controllerValidarEmail.text, controllerValidarSenha.text);
-                      // print(listaemail);
-
-                      // findAll().then((usuarios) => debugPrint(usuarios.toString()));
-                      // });
                     },
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -258,72 +184,84 @@ class _telaloginState extends State<telalogin> {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      primary: Colors.white,
-                      minimumSize: Size.fromHeight(50),
-                      shape: StadiumBorder(),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: (loading)
-                          ? [
-                              const Padding(
-                                padding: EdgeInsets.all(16),
-                                child: SizedBox(
-                                  width: 24,
-                                  height: 24,
-                                  child: CircularProgressIndicator(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
-                            ]
-                          : [
-                              const FaIcon(
-                                FontAwesomeIcons.google,
-                                color: Colors.red,
-                              ),
-                              const Padding(
-                                padding: EdgeInsets.all(16.0),
-                                child: Text(
-                                  'Logar com o Google',
-                                  style: TextStyle(
-                                      fontSize: 20, color: Colors.grey),
-                                ),
-                              ),
-                            ],
-                    ),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => notificacao(usuario: usuario,)));
-                      // final provider = Provider.of<ServicoAutenticacaoGoogle>(
-                      //     context,
-                      //     listen: false);
-                      // provider.googleLogin();
-                    },
-                  ),
-                ),
+
+                // Implementacao futura: logar com google, funcionalidade aguardando ajuste no banco de dados.
+                //
+                // Padding(
+                //   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
+                //   child: ElevatedButton(
+                //     style: ElevatedButton.styleFrom(
+                //       primary: Colors.white,
+                //       minimumSize: Size.fromHeight(50),
+                //       shape: StadiumBorder(),
+                //     ),
+                //     child: Row(
+                //       mainAxisAlignment: MainAxisAlignment.center,
+                //       children: (loading)
+                //           ? [
+                //               const Padding(
+                //                 padding: EdgeInsets.all(16),
+                //                 child: SizedBox(
+                //                   width: 24,
+                //                   height: 24,
+                //                   child: CircularProgressIndicator(
+                //                     color: Colors.white,
+                //                   ),
+                //                 ),
+                //               )
+                //             ]
+                //           : [
+                //               const FaIcon(
+                //                 FontAwesomeIcons.google,
+                //                 color: Colors.red,
+                //               ),
+                //               const Padding(
+                //                 padding: EdgeInsets.all(16.0),
+                //                 child: Text(
+                //                   'Logar com o Google',
+                //                   style: TextStyle(
+                //                       fontSize: 20, color: Colors.grey),
+                //                 ),
+                //               ),
+                //             ],
+                //     ),
+                //     onPressed: () {
+                //       Navigator.of(context).push(MaterialPageRoute(
+                //           builder: (context) => notificacao(usuario: usuario,)));
+                //       // final provider = Provider.of<ServicoAutenticacaoGoogle>(
+                //       //     context,
+                //       //     listen: false);
+                //       // provider.googleLogin();
+                //     },
+                //   ),
+                // ),
                 Padding(
                   padding: EdgeInsets.all(24),
-
                   child: GestureDetector(
-                    child: Text(
-                      'Não tem cadastro ? click aqui!',
-                      style: TextStyle(
-                        fontSize: 23,
-                        // fontWeight: FontWeight.bold,
-                        letterSpacing: -1.5,
-                      ),
+                    child: Row(
+                      children: const [
+                        Text(
+                          'Não tem cadastro ?  ',
+                          style: TextStyle(
+                            fontSize: 20,
+                            // fontWeight: FontWeight.bold,
+                            letterSpacing: -1.5,
+                          ),
+                        ),
+                        Text(
+                          ' Click Aqui!!',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 27,
+                            // fontWeight: FontWeight.bold,
+                            // letterSpacing: -1.5,
+                          ),
+                        ),
+                      ],
                     ),
                     onTap: () => Navigator.of(context).push(MaterialPageRoute(
                         builder: (context) => cadastroUsuario())),
                   ),
-                  // TextButton(
-                  //   onPressed: () => setFormAction(!isLogin),
-                  //   child: Text(toggleButton),
                 ),
               ],
             ),

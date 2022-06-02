@@ -5,10 +5,10 @@ import 'package:easy_med/telas/tela_principal.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import '../database/dao/alarme_dao.dart';
-import '../database/dao/relatorio_dao.dart';
+import '../database/dao/correncia_alarme.dart';
 import '../model/alarme.dart';
-import '../model/relatorio.dart';
-import 'modal_cadastro_alarme.dart';
+import '../model/Ocorrencia_Alarme.dart';
+import '../widget/modal_cadastro_alarme.dart';
 
 
 class confirmacao extends StatelessWidget {
@@ -20,26 +20,34 @@ class confirmacao extends StatelessWidget {
 
   final alarmeDao daoAlarme = alarmeDao();
   final medicamentoDao daoMedicamento = medicamentoDao();
-  final relatorioDao daoRelatorio = relatorioDao();
-  // late String data = dataFormatada();
+  final ocorrenciaDao daoRelatorio = ocorrenciaDao();
+  bool botaoativo = true;
+
+
+
 
   salvarRegistro(confirmacao)async{
-    await daoRelatorio.salvarRelatorio(Relatorio(
+    await daoRelatorio.salvarRelatorio(OcorrenciaAlarme(
       idAlarme: alarme?.idAlarme,
       dataRegistro: await dataFormatada(),
       confirmacaoUso: confirmacao
     ));
   }
 
-  dataFormatada(){
-    final DateTime dataatual =  DateTime.now();
-    final DateFormat formatter =  DateFormat('d-M-y H:m');
-    final String formatted =  formatter.format(dataatual);
+  dataFormatada()async{
+    final DateTime dataatual = await DateTime.now();
+    final DateFormat dataformatada =  DateFormat('d-M-y hh:mm');
+
+    final String formatted =  dataformatada.format(dataatual);
     return formatted.toString();
   }
 
   @override
   Widget build(BuildContext context) {
+    if (alarme?.quantidade == 0){
+      botaoativo = false;
+    }
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Confirmacao '),
@@ -69,15 +77,14 @@ class confirmacao extends StatelessWidget {
                 children: [
                   Padding(
                       padding: EdgeInsets.all(8),
-                      // child: Text('teste'),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           padding: const EdgeInsets.all(50),
                           primary: Colors.green,
-                          // minimumSize: Size.fromHeight(12),
                           shape: StadiumBorder(),
                         ),
-                        onPressed: () async {
+
+                        onPressed: botaoativo ? () async {
                           int? novaquantidade = await (alarme?.quantidade)! - 1;
                           await salvarRegistro('sim');
                           await daoAlarme
@@ -85,7 +92,10 @@ class confirmacao extends StatelessWidget {
                               .then((value) =>  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
                               builder: (context) => TelaPrincipal(usuario: usuario)),
                                   (route) => false));
-                        },
+                        } :
+
+                        null,
+
                         child: const Text('SIM', style: TextStyle(fontSize: 23)),
                       )),
                   Padding(
@@ -96,10 +106,10 @@ class confirmacao extends StatelessWidget {
                           padding: const EdgeInsets.all(50),
                           shape: StadiumBorder(),
                         ),
-                        onPressed: () async {
+                        onPressed: botaoativo ? () async {
                           await salvarRegistro('nao');
                           Navigator.of(context).pop();
-                        },
+                        } : null,
                         child: const Text('NAO', style: TextStyle(fontSize: 23)),
                       )),
                 ],

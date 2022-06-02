@@ -1,7 +1,7 @@
 import 'package:easy_med/database/dao/medicamento_dao.dart';
-import 'package:easy_med/database/dao/relatorio_dao.dart';
+import 'package:easy_med/database/dao/correncia_alarme.dart';
 import 'package:easy_med/model/medicamento.dart';
-import 'package:easy_med/model/relatorio.dart';
+import 'package:easy_med/model/Ocorrencia_Alarme.dart';
 import 'package:easy_med/model/usuario.dart';
 import 'package:flutter/material.dart';
 
@@ -15,8 +15,8 @@ class TelaRelatorio extends StatefulWidget {
   }
 
 class _TelaRelatorioState extends State<TelaRelatorio> {
-  List<Relatorio> listrelatorio = [];
-  final relatorioDao daoRelatorio = relatorioDao();
+  List<OcorrenciaAlarme> listrelatorio = [];
+  final ocorrenciaDao daoRelatorio = ocorrenciaDao();
   final medicamentoDao daoMedicamento = medicamentoDao();
   List<Medicamento> listaMedicamentos = [];
 

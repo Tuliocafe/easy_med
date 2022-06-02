@@ -1,17 +1,12 @@
 import 'package:easy_med/database/dao/alarme_dao.dart';
-import 'package:easy_med/database/dao/usuario_dao.dart';
 import 'package:easy_med/model/alarme.dart';
 import 'package:easy_med/model/medicamento.dart';
 import 'package:easy_med/telas/novo_alarme.dart';
-import 'package:easy_med/telas/tela_cadastro_medicamento.dart';
 import 'package:easy_med/telas/tela_confirmacao.dart';
-import 'package:easy_med/telas/tela_edicao_alarme.dart';
-import 'package:easy_med/telas/tela_notificacao.dart';
 import 'package:flutter/material.dart';
-
 import '../database/dao/medicamento_dao.dart';
 import '../model/usuario.dart';
-import 'modal_cadastro_alarme.dart';
+import '../widget/modal_cadastro_alarme.dart';
 
 
 class TelaAlarme extends StatefulWidget {
@@ -44,32 +39,18 @@ class _TelaAlarmeState extends State<TelaAlarme> {
   String? dosagem;
   List<Map> alarmenovo = [];
 
-  // Future getMedicamento() async {
-  //   final medicamento = await daoMedicamento.getMedicamento();
-  //
-  //   setState(() {
-  //     this.medicamento = medicamento;
-  //   });
-  // }
+
   @override
   initState(){
     super.initState();
     listaMedicamento();
-    // listarAgenda();
-    // print(widget.usuario?.email);
-    listarAgendaUsuario(widget.usuario?.idUsuario);
+
+    listarAgendaUsuario();
   }
 
-  Future listarAgenda() async{
-    final alarme = await daoAlarme.getAlarmeBD();
-    setState(() {
-      this.alarmes = alarme;
-    });
-    return Future.delayed(Duration(seconds: 0));
-  }
 
-  Future listarAgendaUsuario(usuario) async{
-    final alarme = await daoAlarme.getAlarmeUsuario(usuario);
+  Future listarAgendaUsuario() async{
+    final alarme = await daoAlarme.getAlarmeUsuario(widget.usuario?.idUsuario);
     setState(() {
       this.alarmes = alarme;
     });
@@ -82,29 +63,19 @@ class _TelaAlarmeState extends State<TelaAlarme> {
     });
   }
 
-  // Future listarAgenda2() async{
-  //   final alarme2 = await daoAlarme.selectAgenda();
-  //   setState(() {
-  //     alarmenovo = alarme2;
-  //   });
-  //   return Future.delayed(Duration(seconds: 0));
-  // }
 
 
 
   @override
   Widget build(BuildContext context) {
-    email = widget.usuario?.email;
     return Scaffold(
         // backgroundColor: Colors.black,
         floatingActionButton: Container(
           padding: const EdgeInsets.only(left: 32, top: 0, right: 0, bottom: 0),
           child: InkWell(
           child: FloatingActionButton.extended(
-
             heroTag: 'botaoAdd',
             onPressed: () {
-              print(widget.usuario?.idUsuario);
               Navigator.push(context, ModalAlarme(builder: (context) => NovoAlarme(usuario: widget.usuario)));
             },
             label: const Text('Adicionar'),
@@ -123,18 +94,17 @@ class _TelaAlarmeState extends State<TelaAlarme> {
                 // Text('Alarme', style: TextStyle(fontFamily: 'avenir')),
                 Expanded(
                   child: RefreshIndicator(
-                    onRefresh: listarAgenda,
+                    onRefresh: listarAgendaUsuario,
                     child: ListView.builder(
                         itemCount: alarmes.length,
                         itemBuilder: (context, index) {
-                          // children: alarmes.map((alarme){
                           return ListTile(
                             title: Container(
-                              padding: EdgeInsets.symmetric(
+                              padding: const EdgeInsets.symmetric(
                                   horizontal: 16, vertical: 24),
                               margin: const EdgeInsets.only(bottom: 32),
                               decoration: BoxDecoration(
-                                gradient: LinearGradient(
+                                gradient: const LinearGradient(
                                     colors: [
                                       Colors.red,
                                       Colors.white,
@@ -161,14 +131,14 @@ class _TelaAlarmeState extends State<TelaAlarme> {
                                       alarme: alarmes[index],
                                       nomeMedicamento: listMedicamentos[alarmes[index].idMedicamento! -1].nome.toString(),)));
                                   },
-                                onLongPress: () {
-                                    setState(() {
-                                      // cancel = await AndroidAlarmManager.cancel(idAlarme!);
+                                // onLongPress: () {
+                                //     setState(() {
+                                //       // cancel = await AndroidAlarmManager.cancel(idAlarme!);
+                                //
+                                //       listarAgendaUsuario();
+                                //     });
 
-                                      listarAgenda();
-                                    });
-
-                                },
+                                // },
 
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

@@ -1,8 +1,6 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:easy_med/database/dao/alarme_dao.dart';
-import 'package:easy_med/database/dao/usuario_dao.dart';
-import 'package:easy_med/telas/tela_alarme.dart';
-import 'package:easy_med/telas/tela_notificacao.dart';
+
 import 'package:easy_med/telas/tela_principal.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +10,7 @@ import '../database/dao/medicamento_dao.dart';
 import '../model/alarme.dart';
 import '../model/medicamento.dart';
 import '../model/usuario.dart';
-import 'modal_cadastro_alarme.dart';
+import '../widget/modal_cadastro_alarme.dart';
 
 class EditarAlarme extends StatefulWidget {
   Usuario? usuario;
@@ -190,7 +188,8 @@ class _EditarAlarmeState extends State<EditarAlarme> {
                         ),
                         onPressed: () async {
                           try{
-                            daoAlarme.deletarAlarme(widget.alarme?.idAlarme);
+                            await daoAlarme.deletarAlarme(widget.alarme?.idAlarme);
+                            await AndroidAlarmManager.cancel(widget.alarme!.idAlarme!);
                             Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
                                 builder: (context) => TelaPrincipal(usuario: widget.usuario)),
                                     (route) => false);

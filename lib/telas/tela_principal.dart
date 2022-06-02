@@ -1,18 +1,12 @@
 import 'package:easy_med/database/dao/alarme_dao.dart';
-import 'package:easy_med/database/dao/usuario_dao.dart';
 import 'package:easy_med/model/alarme.dart';
 import 'package:easy_med/model/medicamento.dart';
-import 'package:easy_med/telas/novo_alarme.dart';
 import 'package:easy_med/telas/tela_alarme.dart';
 import 'package:easy_med/telas/tela_cadastro_medicamento.dart';
-import 'package:easy_med/telas/tela_confirmacao.dart';
-import 'package:easy_med/telas/tela_notificacao.dart';
 import 'package:flutter/material.dart';
-
 import '../database/dao/medicamento_dao.dart';
 import '../model/usuario.dart';
 import '../widget/menu_lateral_widget.dart';
-import 'modal_cadastro_alarme.dart';
 
 
 class TelaPrincipal extends StatefulWidget {
@@ -20,11 +14,6 @@ class TelaPrincipal extends StatefulWidget {
   final Medicamento? medicamento;
   final Alarme? alarme;
 
-  // alarme({Key? key}) : super(key: key);
-
-  // final List<AlarmeInfo> alarmes = [
-  //
-  // ];
 
   TelaPrincipal({Key? key, this.usuario,this.medicamento, this.alarme}) : super(key: key);
 
@@ -38,17 +27,14 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
   Medicamento? medicamento;
   final medicamentoDao daoMedicamento = medicamentoDao();
   final alarmeDao daoAlarme = alarmeDao();
-
+  final nomeTela = ['Alarmes', 'Cadastro Medicamento'];
+  int _indexAtual = 0;
 
   @override
   initState(){
     super.initState();
 
   }
-
-
-  int _indexAtual = 0;
-
 
   late final telas = [
     TelaAlarme(usuario: widget.usuario),
@@ -57,20 +43,16 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
 
   @override
   Widget build(BuildContext context) {
-    // listarAgenda();
-    // widget.alarmes
-    //     .add(AlarmeInfo(medicamento: 'PredSim', hora: '15', minuto: '30'));
     return Scaffold(
-      // backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('Alarmes'),
+        title: Text(nomeTela[_indexAtual]),
       ),
       body: telas[_indexAtual],
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _indexAtual,
         items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
-              icon: Icon(Icons.home), label: 'Alarme'),
+              icon: Icon(Icons.alarm), label: 'Alarme'),
           BottomNavigationBarItem(
               icon: Icon(Icons.medication), label: 'Medicamento'),
         ],
@@ -84,7 +66,6 @@ class _TelaPrincipalState extends State<TelaPrincipal> {
       endDrawer: MenuLateralWidget(
           usuario: widget.usuario
       ),
-
     );
   }
 }

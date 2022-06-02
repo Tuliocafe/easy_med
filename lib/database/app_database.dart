@@ -7,25 +7,21 @@ Future<Database> getDatabase() async {
   return await openDatabase(
     path,
     version: versao,
-    onCreate:
-        // _criarBanco
-        (db, version) async {
+    onCreate: (db, version) async {
       await db.execute(sqlUsuario);
       await db.execute(sqlMedicamento);
       await db.execute(sqlAlarme);
       await db.execute(sqlRelatorio);
     },
-      // onConfigure: _onConfigure
-    // onDowngrade: onDatabaseDowngradeDelete
   );
 }
 
-  _onConfigure(Database db) async {
-await db.execute('PRAGMA foreign_keys = ON');
+_onConfigure(Database db) async {
+  await db.execute('PRAGMA foreign_keys = ON');
 }
 
 const sqlUsuario = 'CREATE TABLE usuario('
-    'idUsuario INTEGER PRIMARY KEY,nome TEXT,idade INTEGER,sexo TEXT,email TEXT,senha TEXT,tipo TEXT)';
+    'idUsuario INTEGER PRIMARY KEY,nome TEXT,idade INTEGER,genero TEXT,email TEXT,senha TEXT)';
 
 const sqlMedicamento = 'CREATE TABLE medicamento('
     'idMedicamento INTEGER PRIMARY KEY,'
@@ -44,16 +40,12 @@ const sqlAlarme = 'CREATE TABLE alarme ('
     'FOREIGN KEY(idUsuario) REFERENCES usuario(idUsuario)'
     'FOREIGN KEY(idMedicamento) REFERENCES Medicamento(idMedicamento))';
 
-
-const sqlRelatorio = 'CREATE TABLE relatorio ('
-    'idRelatorio INTEGER PRIMARY KEY,'
+const sqlRelatorio = 'CREATE TABLE ocorrenciaAlarme ('
+    'idOcorrencia INTEGER PRIMARY KEY,'
     'idAlarme INTEGER,'
     'dataRegistro TEXT,'
     'confirmacaoUso TEXT,'
     'FOREIGN KEY(idAlarme) REFERENCES alarme(idAlarme))';
-
-
-
 
 void apagabanco() async {
   var databasesPath = await getDatabasesPath();
@@ -61,7 +53,7 @@ void apagabanco() async {
   await deleteDatabase(path);
 }
 
-// Future close() async {
-//   final Database db = await getDatabase();
-//   db.close();
-// }
+Future close() async {
+  final Database db = await getDatabase();
+  db.close();
+}

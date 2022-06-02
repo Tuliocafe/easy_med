@@ -1,18 +1,14 @@
 import 'package:android_alarm_manager_plus/android_alarm_manager_plus.dart';
 import 'package:easy_med/database/dao/alarme_dao.dart';
 import 'package:easy_med/database/dao/usuario_dao.dart';
-import 'package:easy_med/telas/tela_alarme.dart';
-import 'package:easy_med/telas/tela_notificacao.dart';
 import 'package:easy_med/telas/tela_principal.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-import '../api/notificacao_api.dart';
+import 'package:flutter_alarm_clock/flutter_alarm_clock.dart';
 import '../database/dao/medicamento_dao.dart';
 import '../model/alarme.dart';
 import '../model/medicamento.dart';
 import '../model/usuario.dart';
-import 'modal_cadastro_alarme.dart';
+import '../servico/notificacao.dart';
 
 class NovoAlarme extends StatefulWidget {
   final Usuario? usuario;
@@ -24,8 +20,8 @@ class NovoAlarme extends StatefulWidget {
 }
 
 class _NovoAlarmeState extends State<NovoAlarme> {
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  NotificationService _notificationService = NotificationService();
+  // Autenticacao do fireibird vai ser uma desenvolvimento futuro
+  // final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   Usuario? usuario;
   final nomeAlarme = TextEditingController();
@@ -40,7 +36,6 @@ class _NovoAlarmeState extends State<NovoAlarme> {
   int? ultimoalarme;
   Alarme? ultimoAlarme;
 
-  // const AddTodoButton({Key key}) : super(key: key);
   final formKey = GlobalKey<FormState>();
   String? medicamentoSelecionado;
   List<Medicamento> listaMedicamento = [];
@@ -50,16 +45,6 @@ class _NovoAlarmeState extends State<NovoAlarme> {
   void initState() {
     super.initState();
     atualizarlistaMedicamento();
-    listenNotification();
-  }
-
-  void listenNotification() =>
-      NotificationService.onNotifications.stream.listen(onCliclNotification);
-
-  void onCliclNotification(String? payload) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => TelaAlarme(),
-    ));
   }
 
   void atualizarlistaMedicamento() async {
@@ -70,7 +55,6 @@ class _NovoAlarmeState extends State<NovoAlarme> {
   }
 
   Future registraAlarme() async {
-    // print(widget.usuario?.idUsuario);
     try {
       await daoAlarme.salvarAlarme(Alarme(
         nome: nomeAlarme.text,
@@ -112,7 +96,6 @@ class _NovoAlarmeState extends State<NovoAlarme> {
         child: Padding(
           padding: const EdgeInsets.all(32.0),
           child: Material(
-            // color: AppColors.accentColor,
             elevation: 2,
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
@@ -149,7 +132,7 @@ class _NovoAlarmeState extends State<NovoAlarme> {
                         ),
                         cursorColor: Colors.white,
                         validator: (valor) {
-                          if (valor!.isEmpty) {
+                          if (valor!.length != 2) {
                             return 'Favor prencher os 2 digitos';
                           } else if (int.parse(valor) >= 24) {
                             return 'Valor deve ser menor que 24';
@@ -176,7 +159,6 @@ class _NovoAlarmeState extends State<NovoAlarme> {
                           } else if (int.parse(valor!) >= 60) {
                             return 'Valor precisa ser menor que 60';
                           }
-
                           return null;
                         },
                       ),
@@ -185,6 +167,7 @@ class _NovoAlarmeState extends State<NovoAlarme> {
                         thickness: 0.2,
                       ),
                       TextFormField(
+                        keyboardType: TextInputType.number,
                         controller: quantidadeAlarme,
                         decoration: const InputDecoration(
                           labelText: 'Quantidade Atual',
@@ -204,50 +187,58 @@ class _NovoAlarmeState extends State<NovoAlarme> {
                           shape: StadiumBorder(),
                         ),
                         onPressed: () async {
-                          // print(widget.usuario);
-                          // date time format (year,month,date,hour,minutes,seconds)
                           final form = formKey.currentState!;
                           final isValid = form.validate();
                           if (isValid) {
                             try {
                               registraAlarme().then((value) => getultimoID()
-                                  .then((value) => getMedicamento().then(
-                                      (value) => AndroidAlarmManager.oneShotAt(
-                                          DateTime(
-                                              DateTime.now().year,
-                                              DateTime.now().month,
-                                              DateTime.now().day,
-                                              int.parse(horaAlarme.text),
-                                              int.parse(minutoAlarme.text)),
+                                  .then((value) => getMedicamento()
+                                      .then((value) =>
+                                          AndroidAlarmManager.periodic(
+                                              Duration(hours: 24),
+                                              ultimoalarme!,
+                                              notifica,
+                                              startAt: DateTime(
+                                                  DateTime.now().year,
+                                                  DateTime.now().month,
+                                                  DateTime.now().day,
+                                                  int.parse(horaAlarme.text),
+                                                  int.parse(minutoAlarme.text)),
+                                              exact: true,
+                                              wakeup: true,
+                                              allowWhileIdle: true,
+                                              rescheduleOnReboot: true))
 
-                                          // ultimoAlarme.idMedicamento!, verificar como fazer
-                                          ultimoalarme!,
-                                          notifica,
-                                          exact: true,
-                                          alarmClock: true,
-                                          wakeup: true,
-                                          allowWhileIdle: true,
-                                          rescheduleOnReboot: true)
-                                      // .then((value) =>
-                                      //     FlutterAlarmClock.createAlarm(
-                                      //         int.parse(horaAlarme.text),
-                                      //         int.parse(minutoAlarme.text)))
-                                      )));
+                                      // Monitoramento para teste de um unico alarme
+                                      // AndroidAlarmManager.oneShotAt(
+                                      // DateTime(
+                                      //     DateTime.now().year,
+                                      //     DateTime.now().month,
+                                      //     DateTime.now().day,
+                                      //     int.parse(horaAlarme.text),
+                                      //     int.parse(minutoAlarme.text)),
+                                      //
+                                      // // ultimoAlarme.idMedicamento!, verificar como fazer
+                                      // ultimoalarme!,
+                                      // notifica,
+                                      // exact: true,
+                                      // alarmClock: true,
+                                      // wakeup: true,
+                                      // allowWhileIdle: true,
+                                      // rescheduleOnReboot: true
+                                      // )
+
+                                      .then((value) =>
+                                          FlutterAlarmClock.createAlarm(
+                                              int.parse(horaAlarme.text),
+                                              int.parse(minutoAlarme.text)))));
                               Navigator.of(context).pushAndRemoveUntil(
                                   MaterialPageRoute(
                                       builder: (context) => TelaPrincipal(
                                           usuario: widget.usuario)),
                                   (route) => false);
-                              // await Navigator.of(context).push(MaterialPageRoute(
-                              //     builder: (context) => TelaAlarme(
-                              //           usuario: widget.usuario,
-                              //         )));
-                            } catch (e) {
-                              print(e);
-                            }
-                            // Navigator.of(context).pop(); nao apresentou o resultado esperado
+                            } catch (e) {}
                           }
-                          ;
                         },
                         child: Text('Salvar'),
                       ),
@@ -287,12 +278,6 @@ class _NovoAlarmeState extends State<NovoAlarme> {
                 value: map.idMedicamento.toString(),
               );
             }).toList(),
-            // listaMedicamento.map((String, String medCadastroJson) {
-            //   return DropdownMenuItem<String, String>(
-            //     value: id,
-            //     child: Text(medCadastroJson),
-            //   );
-            // }).toList(),
             onChanged: (String? idSelecionado) {
               setState(() {
                 medicamentoSelecionado = idSelecionado;
