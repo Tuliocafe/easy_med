@@ -13,7 +13,6 @@ class cadastroMedicameto extends StatefulWidget {
 class _cadastroUsuarioState extends State<cadastroMedicameto> {
   final medicamentoDao daoMedicamento = medicamentoDao();
   final formKey = GlobalKey<FormState>();
-
   bool loading = false;
   final nome = TextEditingController();
   final dosagem = TextEditingController();

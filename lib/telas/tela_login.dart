@@ -69,14 +69,6 @@ class _telaloginState extends State<telalogin> {
                   padding: EdgeInsets.all(8),
                   child: Image.asset('lib/imagens/ez_med.png'),
                 ),
-                // const Text(
-                //   'Seja bem vindo !!',
-                //   style: TextStyle(
-                //     fontSize: 30,
-                //     fontWeight: FontWeight.bold,
-                //     letterSpacing: -1.5,
-                //   ),
-                // ),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
                   child: TextFormField(
@@ -122,25 +114,13 @@ class _telaloginState extends State<telalogin> {
                       shape: StadiumBorder(),
                     ),
                     onPressed: () async {
-
-                      // daoUsuario.getAllUsuario();
-
                       final form = formKey.currentState!;
                       final isValid = form.validate();
                       if (isValid) {
-                        // if (email.text == '1') {
-                        //   await getUser('tuliocafe@yahoo.com.br').then((value) =>
-                        //       Navigator.of(context).push(MaterialPageRoute(
-                        //       builder: (context) =>
-                        //           TelaPrincipal(usuario: usuario)))
-                        //   );
-                        // } else {
+
                         valido = await validar(email.text, senha.text);
-                        // try {
+
                         if (valido == true) {
-                          // if (valido == true) {
-                          //   getUser(email.text).then((value) =>
-                          // print('Certo'));
                           await getUser(email.text);
                           await Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) =>
@@ -185,56 +165,6 @@ class _telaloginState extends State<telalogin> {
                   ),
                 ),
 
-                // Implementacao futura: logar com google, funcionalidade aguardando ajuste no banco de dados.
-                //
-                // Padding(
-                //   padding: EdgeInsets.symmetric(vertical: 8, horizontal: 32),
-                //   child: ElevatedButton(
-                //     style: ElevatedButton.styleFrom(
-                //       primary: Colors.white,
-                //       minimumSize: Size.fromHeight(50),
-                //       shape: StadiumBorder(),
-                //     ),
-                //     child: Row(
-                //       mainAxisAlignment: MainAxisAlignment.center,
-                //       children: (loading)
-                //           ? [
-                //               const Padding(
-                //                 padding: EdgeInsets.all(16),
-                //                 child: SizedBox(
-                //                   width: 24,
-                //                   height: 24,
-                //                   child: CircularProgressIndicator(
-                //                     color: Colors.white,
-                //                   ),
-                //                 ),
-                //               )
-                //             ]
-                //           : [
-                //               const FaIcon(
-                //                 FontAwesomeIcons.google,
-                //                 color: Colors.red,
-                //               ),
-                //               const Padding(
-                //                 padding: EdgeInsets.all(16.0),
-                //                 child: Text(
-                //                   'Logar com o Google',
-                //                   style: TextStyle(
-                //                       fontSize: 20, color: Colors.grey),
-                //                 ),
-                //               ),
-                //             ],
-                //     ),
-                //     onPressed: () {
-                //       Navigator.of(context).push(MaterialPageRoute(
-                //           builder: (context) => notificacao(usuario: usuario,)));
-                //       // final provider = Provider.of<ServicoAutenticacaoGoogle>(
-                //       //     context,
-                //       //     listen: false);
-                //       // provider.googleLogin();
-                //     },
-                //   ),
-                // ),
                 Padding(
                   padding: EdgeInsets.all(24),
                   child: GestureDetector(
@@ -244,7 +174,6 @@ class _telaloginState extends State<telalogin> {
                           'Não tem cadastro ?  ',
                           style: TextStyle(
                             fontSize: 20,
-                            // fontWeight: FontWeight.bold,
                             letterSpacing: -1.5,
                           ),
                         ),
@@ -253,8 +182,6 @@ class _telaloginState extends State<telalogin> {
                           style: TextStyle(
                             color: Colors.black,
                             fontSize: 27,
-                            // fontWeight: FontWeight.bold,
-                            // letterSpacing: -1.5,
                           ),
                         ),
                       ],

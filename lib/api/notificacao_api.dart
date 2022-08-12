@@ -55,22 +55,3 @@ class NotificationService {
     );
   }
 }
-
-// class app extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//
-//     return MaterialApp(
-//       // debugShowCheckedModeBanner: false,
-//       theme: ThemeData(
-//         primarySwatch: Colors.red,
-//         visualDensity: VisualDensity.adaptivePlatformDensity,
-//       ),
-//       home: notificacao(),
-//       // home: notificacao()
-//       // home: TelaUsuario(),
-//       // home: cadastroUsuario(),
-//       // home: alarme(),
-//     );
-//   }
-// }

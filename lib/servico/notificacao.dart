@@ -124,10 +124,6 @@ class _notificacaoState extends State<notificacao> {
               child: ElevatedButton(
                 onPressed: () async {
 
-
-                   // var relatoio = daoRelatorio.findAllRelatorio();
-                   // print(relatoio);
-
                 },
                 child: Text('Botao de teste'),
               )),

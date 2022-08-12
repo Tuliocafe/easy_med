@@ -15,11 +15,6 @@ class TelaAlarme extends StatefulWidget {
   Alarme? alarme;
   final int? id;
 
-  // alarme({Key? key}) : super(key: key);
-
-  // final List<AlarmeInfo> alarmes = [
-  //
-  // ];
 
   TelaAlarme({Key? key, this.usuario,this.medicamento, this.alarme, this.id,}) : super(key: key);
 
@@ -44,12 +39,18 @@ class _TelaAlarmeState extends State<TelaAlarme> {
   initState(){
     super.initState();
     listaMedicamento();
-
-    listarAgendaUsuario();
+    listarAgendaUsuario(widget.usuario?.idUsuario);
   }
 
 
-  Future listarAgendaUsuario() async{
+  Future listarAgendaUsuario(usuario) async{
+    final alarme = await daoAlarme.getAlarmeUsuario(usuario);
+    setState(() {
+      this.alarmes = alarme;
+    });
+  }
+
+  Future recarregarAgenda() async{
     final alarme = await daoAlarme.getAlarmeUsuario(widget.usuario?.idUsuario);
     setState(() {
       this.alarmes = alarme;
@@ -69,7 +70,6 @@ class _TelaAlarmeState extends State<TelaAlarme> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        // backgroundColor: Colors.black,
         floatingActionButton: Container(
           padding: const EdgeInsets.only(left: 32, top: 0, right: 0, bottom: 0),
           child: InkWell(
@@ -89,12 +89,10 @@ class _TelaAlarmeState extends State<TelaAlarme> {
             padding: EdgeInsets.symmetric(horizontal: 8, vertical: 32),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
-              // mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Text('Alarme', style: TextStyle(fontFamily: 'avenir')),
                 Expanded(
                   child: RefreshIndicator(
-                    onRefresh: listarAgendaUsuario,
+                    onRefresh: recarregarAgenda,
                     child: ListView.builder(
                         itemCount: alarmes.length,
                         itemBuilder: (context, index) {
@@ -131,14 +129,6 @@ class _TelaAlarmeState extends State<TelaAlarme> {
                                       alarme: alarmes[index],
                                       nomeMedicamento: listMedicamentos[alarmes[index].idMedicamento! -1].nome.toString(),)));
                                   },
-                                // onLongPress: () {
-                                //     setState(() {
-                                //       // cancel = await AndroidAlarmManager.cancel(idAlarme!);
-                                //
-                                //       listarAgendaUsuario();
-                                //     });
-
-                                // },
 
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,

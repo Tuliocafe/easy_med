@@ -13,6 +13,8 @@ class MenuLateralWidget extends StatelessWidget {
     Key? key,
   }) : super(key: key);
 
+
+
   @override
   Widget build(BuildContext context) {
     if (usuario?.email == 'admin@admin.com.br'){
@@ -61,7 +63,7 @@ class MenuLateralWidget extends StatelessWidget {
 
   Widget itemMenuLateral(
       {required String text, required IconData icon, VoidCallback? onClicked, apresentar}) {
-    final cor = Colors.black;
+    const cor = Colors.black;
     return Visibility(
         visible: apresentar,
         child: ListTile(

@@ -1,4 +1,4 @@
-# easy_med
+# Ez_med
 
 A new Flutter project.
 

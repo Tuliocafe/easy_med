@@ -20,8 +20,6 @@ class NovoAlarme extends StatefulWidget {
 }
 
 class _NovoAlarmeState extends State<NovoAlarme> {
-  // Autenticacao do fireibird vai ser uma desenvolvimento futuro
-  // final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
 
   Usuario? usuario;
   final nomeAlarme = TextEditingController();

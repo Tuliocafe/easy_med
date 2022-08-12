@@ -92,10 +92,7 @@ class confirmacao extends StatelessWidget {
                               .then((value) =>  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(
                               builder: (context) => TelaPrincipal(usuario: usuario)),
                                   (route) => false));
-                        } :
-
-                        null,
-
+                        } :  null,
                         child: const Text('SIM', style: TextStyle(fontSize: 23)),
                       )),
                   Padding(
